@@ -124,3 +124,34 @@ test("demo edits survive role changes and stay isolated between browsers", async
   await page.context().clearCookies();
   expect((await page.request.get("/api/exports/applications")).status()).toBe(401);
 });
+
+test("demo controls give immediate feedback while their sign-in request is pending", async ({ browser, baseURL }) => {
+  for (const [path, role, label, destination] of [
+    ["/", /^Administrator Screen/, "Opening administrator demo…", /\/dashboard$/],
+    ["/login", /^Student demo$/, "Opening student demo…", /\/apply$/],
+  ] as const) {
+    const context = await browser.newContext({ baseURL, reducedMotion: "reduce", viewport: { width: 390, height: 844 } });
+    try {
+      const trial = await context.newPage();
+      let release!: () => void;
+      const hold = new Promise<void>((resolve) => { release = resolve; });
+      await trial.route((url) => url.pathname === path, async (route) => {
+        if (route.request().method() === "POST") await hold;
+        await route.continue();
+      });
+      try {
+        await trial.goto(path);
+        await trial.getByRole("button", { name: role }).click();
+        const status = trial.getByRole("status").filter({ hasText: label });
+        await expect(status).toBeVisible();
+        await expect(status.locator(".skeleton").first()).toHaveCSS("animation-name", "none");
+        await expect(trial.getByRole("button", { name: role })).toBeDisabled();
+      } finally {
+        release();
+      }
+      await expect(trial).toHaveURL(destination);
+    } finally {
+      await context.close();
+    }
+  }
+});

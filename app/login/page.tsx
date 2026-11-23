@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { ArrowUpRight, KeyRound, ChevronDown } from "lucide-react";
+import { KeyRound, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { demoRoles, demoAccounts, demoCredentials, demoPassword } from "@/lib/demo-preview";
+import { demoAccounts, demoCredentials, demoPassword } from "@/lib/demo-preview";
 import { redirect } from "next/navigation";
 import { AuthFrame } from "@/components/auth-frame";
+import { DemoRolePicker } from "@/components/demo-role-picker";
 import { LoginForm } from "@/components/login-form";
-import { openDemo, resetDemo } from "@/lib/actions";
+import { resetDemo } from "@/lib/actions";
 import { session } from "@/lib/data";
 import { roleHome } from "@/lib/model";
 
@@ -21,11 +22,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
       {demo === "unavailable" && <p role="alert">Demo sign-in is temporarily unavailable. Please try again.</p>}
       {demo === "blocked" && <p role="alert">This role is blocked in your demo. Choose another role or start fresh.</p>}
       {demo === "fresh" && <p role="status">Choose a role to start a fresh demo.</p>}
-      <form className="demo-access-roles" aria-label="One-click demo access" action={openDemo}>
-        {demoRoles.map((role) => <Button type="submit" name="role" value={role} variant="outline" key={role}>
-          {demoCredentials[role].label} demo <ArrowUpRight size={14} />
-        </Button>)}
-      </form>
+      <DemoRolePicker variant="buttons" />
       <details className="demo-credentials">
         <summary><KeyRound size={15} /> Demo credentials <ChevronDown size={14} /></summary>
         <dl>{demoAccounts.map((role) => <div key={role}>

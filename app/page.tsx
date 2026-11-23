@@ -4,11 +4,8 @@ import { ArrowDown, ArrowRight, ArrowUpRight, ClipboardCheck, FileText, Fingerpr
 import { Brand, CreatorCredit } from "@/components/common";
 import { PublicHeader } from "@/components/public-header";
 import { LandingWorkflow } from "@/components/landing-workflow";
-import { demoCredentials, demoRoles } from "@/lib/demo-preview";
-import { openDemo } from "@/lib/actions";
+import { DemoRolePicker } from "@/components/demo-role-picker";
 import "./landing.css";
-
-const roleIcons = { student: FileText, reviewer: ClipboardCheck, administrator: ShieldCheck };
 
 export default function Home() {
   return <div className="landing">
@@ -62,17 +59,7 @@ export default function Home() {
             <div><p className="lp-kicker"><span/> Public demo</p><h2 id="demo-heading">Choose a workspace.</h2></div>
             <p>Try the real workflow with fictional applicants. Switch roles to follow your changes from application to decision.</p>
           </div>
-          <form className="lp-demo-grid" action={openDemo}>
-            {demoRoles.map((role) => {
-              const Icon = roleIcons[role];
-              const { label, description } = demoCredentials[role];
-              return <button key={role} type="submit" name="role" value={role} className="lp-role-card">
-                <span className="lp-role-icon"><Icon size={22} /></span>
-                <span><strong>{label}</strong><span>{description}</span></span>
-                <ArrowUpRight className="lp-role-arrow" size={18} />
-              </button>;
-            })}
-          </form>
+          <DemoRolePicker variant="cards" />
         </div>
       </section>
 
