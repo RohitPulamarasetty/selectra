@@ -54,3 +54,24 @@ test("the masthead aligns across access pages and password controls respond", as
     await expect.poll(() => submit.evaluate((element) => getComputedStyle(element).backgroundColor)).not.toBe(initial);
   }
 });
+
+test("the demo buttons and public credentials open sample views without workspace access", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByRole("link", { name: "Student demo" }).click();
+  await expect(page.getByRole("heading", { name: "Student workspace" })).toBeVisible();
+  await expect(page.getByText("Shortlisted", { exact: true }).first()).toBeVisible();
+  await page.getByRole("navigation", { name: "Choose a demo role" }).getByRole("link", { name: "Reviewer" }).click();
+  await page.getByRole("slider", { name: "Academic readiness" }).press("ArrowRight");
+  await expect(page.getByLabel("Weighted score")).toHaveText("85.0");
+  await page.goto("/login");
+  await page.getByText("Demo credentials", { exact: true }).click();
+  await expect(page.getByText("admin@selectra-preview.test")).toBeVisible();
+  await page.getByLabel("Email address").fill("admin@selectra-preview.test");
+  await page.getByLabel("Password", { exact: true }).fill("SelectraPreview2026!");
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Administrator workspace" })).toBeVisible();
+  await expect(page.getByRole("row")).toHaveCount(9);
+  expect((await page.request.get("/api/exports/applications")).status()).toBe(401);
+  await page.goto("/dashboard");
+  await expect(page).toHaveURL(/\/login$/);
+});

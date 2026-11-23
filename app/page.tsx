@@ -1,10 +1,13 @@
 import { CampusPhoto } from "@/components/campus-photo";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, ArrowUpRight, Fingerprint, GitCompareArrows, Scale } from "lucide-react";
+import { ArrowDown, ArrowUpRight, ClipboardCheck, FileText, Fingerprint, GitCompareArrows, Scale, ShieldCheck } from "lucide-react";
 import { Brand, CreatorCredit } from "@/components/common";
 import { PublicHeader } from "@/components/public-header";
 import { LandingWorkflow } from "@/components/landing-workflow";
+import { demoCredentials, demoRoles } from "@/lib/demo-preview";
 import "./landing.css";
+
+const roleIcons = { student: FileText, reviewer: ClipboardCheck, administrator: ShieldCheck };
 
 export default function Home() {
   return <div className="landing">
@@ -22,7 +25,7 @@ export default function Home() {
           <p className="lp-description lp-enter">From a student’s first draft to the published shortlist. Keep the evidence, reviews, and decisions together.</p>
           <div className="lp-hero-actions lp-enter">
             <Link href="/apply" className="lp-button lp-primary">Start an application <ArrowUpRight size={19} /></Link>
-            <Link href="/login" className="lp-staff">Staff sign in <ArrowRight size={16} /></Link>
+            <a href="#explore-demo" className="lp-button lp-button-small">Try the demo <ArrowDown size={16} /></a>
           </div>
         </div>
         <figure className="lp-visual">
@@ -44,6 +47,26 @@ export default function Home() {
             <p>See what each person does and what Selectra records along the way.</p>
           </div>
           <LandingWorkflow />
+        </div>
+      </section>
+
+      <section className="lp-demo" id="explore-demo" aria-labelledby="demo-heading">
+        <div className="lp-wrap">
+          <div className="lp-section-header">
+            <div><p className="lp-kicker"><span/> Public demo</p><h2 id="demo-heading">Choose a workspace.</h2></div>
+            <p>Open any role in one click and explore the same fictional intake.</p>
+          </div>
+          <div className="lp-demo-grid">
+            {demoRoles.map((role) => {
+              const Icon = roleIcons[role];
+              const { label, description } = demoCredentials[role];
+              return <Link key={role} href={`/demo/${role}`} className="lp-role-card">
+                <span className="lp-role-icon"><Icon size={22} /></span>
+                <span><strong>{label}</strong><span>{description}</span></span>
+                <ArrowUpRight className="lp-role-arrow" size={18} />
+              </Link>;
+            })}
+          </div>
         </div>
       </section>
 

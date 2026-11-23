@@ -1,6 +1,7 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
+import { demoRoleForEmail } from "@/lib/demo-preview";
 import { database } from "@/lib/db/server";
 import { digest, hashPassword, verifyPassword } from "@/lib/db/password.mjs";
 import type { Profile } from "@/lib/model";
@@ -78,6 +79,7 @@ export async function passwordSignIn(email: string, password: string) {
 
 export async function createStudent(name: string, email: string, password: string) {
   const address = email.toLowerCase();
+  if (demoRoleForEmail(address)) return { error: "Use a different email address to create your student account." };
   if (!await withinLimit("register", address)) return { error: "Too many registration attempts. Try again in a few minutes." };
   const { rows } = await (await database()).query<{ id: string }>(`
     insert into auth.users(email,password_hash,raw_user_meta_data)

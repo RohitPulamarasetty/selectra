@@ -30,3 +30,22 @@
 @media (prefers-reduced-motion: reduce) {
   .auth-photo img, .auth-photo p, .auth-form-shell { animation: none; }
 }
+
+.demo-access { display: grid; gap: 11px; padding: 14px; margin-top: 16px; border: 1px solid #cbd5c3; border-radius: 7px; background: #edf1e5; }
+.demo-access-title span { font-weight: 730; color: var(--ink); }
+.demo-access-title p { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.demo-access-roles { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.demo-access-roles .button { min-height: 34px; padding: 5px 8px; font-size: 11px; }
+.demo-credentials { min-width: 0; }
+.demo-credentials summary { display: flex; align-items: center; gap: 6px; width: fit-content; min-height: 29px; color: var(--accent-strong); font-size: 12px; font-weight: 680; list-style: none; }
+.demo-credentials summary::-webkit-details-marker { display: none; }
+.demo-credentials summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+.demo-credentials summary svg:last-child { transition: transform .2s; }
+.demo-credentials[open] summary svg:last-child { transform: rotate(180deg); }
+.demo-credentials dl { display: grid; gap: 5px; padding-top: 6px; }
+.demo-credentials dl div { display: flex; flex-wrap: wrap; gap: 3px 8px; justify-content: space-between; }
+.demo-credentials dt { font-size: 11px; font-weight: 650; }
+.demo-credentials dd { min-width: 0; margin: 0; font-size: 11px; overflow-wrap: anywhere; }
+.auth-divider { display: flex; align-items: center; gap: 9px; color: var(--muted); margin-top: 16px; font-size: 11px; }
+.auth-divider::after, .auth-divider::before { content: ""; height: 1px; flex: 1; background: #d3cbb9; }
+.auth-divider + .login-form { margin-top: 12px; }

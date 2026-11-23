@@ -505,3 +505,12 @@ textarea.input { min-height: 65px; resize: vertical; }
   .site-nav a, .site-sign-in { font-size: 12px; }
   .site-header .brand { font-size: 23px; }
 }
+
+.button-outline { border-color: #b7c3b0; }
+.button-outline:not(:disabled):hover { border-color: var(--accent); }
+.button svg:last-child { transition: translate .18s ease; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .button:not(.button-icon):not(:disabled):hover svg:last-child { translate: 2px 0; }
+  .workflow-shortcuts a { transition: background .2s, border-color .2s, translate .2s; }
+  .workflow-shortcuts a:hover { translate: 0 -2px; }
+}

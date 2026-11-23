@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { endSession, passwordSignIn } from "@/lib/auth";
+import { demoPassword, demoRoleForEmail } from "@/lib/demo-preview";
 import { session } from "@/lib/data";
 import { mutationError } from "@/lib/db/server";
 import { adminRequest, loginSchema, reviewRequest, shortlistRequest } from "@/lib/validation";
@@ -11,6 +12,11 @@ import { roleHome, type Review } from "@/lib/model";
 export async function signIn(input: unknown) {
   const parsed = loginSchema.safeParse(input);
   if (!parsed.success) return { error: "Enter a valid email and password." };
+  const demoRole = demoRoleForEmail(parsed.data.email);
+  if (demoRole) {
+    if (parsed.data.password === demoPassword) redirect(`/demo/${demoRole}`);
+    return { error: "Sign-in failed. Check your email and password." };
+  }
   let auth;
   try {
     auth = await passwordSignIn(parsed.data.email, parsed.data.password);
