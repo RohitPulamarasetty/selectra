@@ -49,14 +49,14 @@ export default async function Apply() {
     <a className="skip-link" href="#student-content">Skip to content</a>
     <header className="student-header"><div className="student-wrap">
       <Link href="/" className="student-brand" aria-label="Selectra home"><Brand /></Link>
-      <div><Pill tone="green">Student portal</Pill><form action={signOut} data-student-signout><Button variant="ghost" size="sm" type="submit"><LogOut size={15} /> Sign out</Button></form></div>
+      <div><Pill tone="green">{current.demo ? "Student demo" : "Student portal"}</Pill><form action={signOut} data-student-signout><Button variant="ghost" size="sm" type="submit"><LogOut size={15} /> Sign out</Button></form></div>
     </div></header>
 
     <main id="student-content" className="student-wrap">
       <section className="student-intro">
         <p className="student-kicker">{state.cycle}</p>
         <h1>{submitted ? "Track your application." : "Your application."}</h1>
-        <p>{submitted ? "Check your status or reply to a screening question." : "Add your studies and written responses."}</p>
+        <p>{current.demo ? "Explore a submitted application with fictional data." : submitted ? "Check your status or reply to a screening question." : "Add your studies and written responses."}</p>
       </section>
       <div className="student-grid">
         <aside className="student-sidebar">
@@ -86,7 +86,7 @@ export default async function Apply() {
             <p className="student-kicker">{clarification.response ? "Response recorded" : "Screening clarification"}</p>
             <h2>{clarification.response ? "Your clarification response" : "The admissions team has a question"}</h2>
             <p>{clarification.question}</p>
-            {clarification.response ? <blockquote>{clarification.response}</blockquote> : state.eligibility === "clarification" &&
+            {clarification.response ? <blockquote>{clarification.response}</blockquote> : !current.demo && state.eligibility === "clarification" &&
               <StudentClarificationForm key={clarification.id} requestId={clarification.id} />}
           </section>}
           <details className="student-box student-submitted-data"><summary><FileText size={17} /> View submitted answers</summary><dl>

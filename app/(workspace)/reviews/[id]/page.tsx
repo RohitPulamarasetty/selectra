@@ -14,7 +14,7 @@ import { queueRows } from "@/lib/queue";
 export const metadata = { title: "Applicant review" };
 
 export default async function ReviewDetail({ params }: { params: Promise<{ id: string }> }) {
-  const [{ id }, { db, profile }] = await Promise.all([params, requireSession()]);
+  const [{ id }, { db, profile, demo }] = await Promise.all([params, requireSession()]);
   if (!/^[a-f\d]{8}(?:-[a-f\d]{4}){3}-[a-f\d]{12}$/i.test(id)) notFound();
   const admin = profile.role === "admin";
   const [records, active, { cycle, rubric }, panel, [review]] = await Promise.all([
@@ -31,7 +31,7 @@ export default async function ReviewDetail({ params }: { params: Promise<{ id: s
     <PageIntro eyebrow={admin ? "Review oversight" : "Independent evaluation"} title={admin ? "Inspect evaluation" : "Applicant review"} description={admin
       ? `${panel.find((p) => p.id === review.evaluator_id)?.name ?? "Evaluator"} · ${applicant.id} · Rubric v${review.rubric_version}`
       : `${queue.filter((r) => r.status === "submitted").length} of ${queue.length} assigned reviews submitted`}>
-      {admin && review.status === "submitted" && !historical && <AdminDialog action="Review reopened" entity={review.id} disabled={cycle.locked} />}
+      {admin && review.status === "submitted" && !historical && <AdminDialog action="Review reopened" entity={review.id} disabled={cycle.locked || demo} />}
       {!admin && <Button className="review-jump" asChild><a href="#rubric-scoring">Jump to scoring</a></Button>}
       {!admin && next && <Button asChild variant="outline"><Link href={`/reviews/${next}`}>Next pending <ArrowRight size={15} /></Link></Button>}
     </PageIntro>
@@ -39,7 +39,7 @@ export default async function ReviewDetail({ params }: { params: Promise<{ id: s
     <div className={`review-layout ${admin ? "review-layout-admin" : ""}`}>
       {!admin && <ReviewRail data={queue} selected={id} />}
       <ApplicantEvidence application={applicant} header />
-      <ReviewForm key={review.id} review={review} weights={version.weights} editable={!admin && !historical} cycleLocked={cycle.locked} next={next} />
+      <ReviewForm key={review.id} review={review} weights={version.weights} editable={!admin && !historical && !demo} cycleLocked={cycle.locked} next={next} />
     </div>
   </>;
 }

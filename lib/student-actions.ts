@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createStudent } from "@/lib/auth";
+import { demoReadOnly } from "@/lib/demo-session";
 import { session } from "@/lib/data";
 import { mutationError } from "@/lib/db/server";
 import { applicationFields, registrationSchema, submissionFields, type StudentDraft } from "@/lib/student";
@@ -36,6 +37,7 @@ export async function saveStudentApplication(raw: unknown): Promise<{ error: str
   }
   const active = await session();
   if (active?.profile.role !== "student") return { error: "Sign in with your student account." };
+  if (active.demo) return { error: demoReadOnly };
   try {
     const draft = await active.db.call<StudentDraft>(
       "select to_jsonb(public.save_student_application($1,$2,$3)) as value", [version, data, submit],
@@ -59,6 +61,7 @@ export async function replyToClarification(_previous: { error: string }, body: F
   if (!input.success) return { error: input.error.issues[0].message };
   const active = await session();
   if (active?.profile.role !== "student") return { error: "Sign in with your student account." };
+  if (active.demo) return { error: demoReadOnly };
   try {
     await active.db.call("select public.reply_to_student_clarification($1,$2)", [input.data.request, input.data.response]);
     revalidatePath("/apply");

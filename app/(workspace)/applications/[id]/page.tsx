@@ -13,7 +13,7 @@ import type { StudentClarification } from "@/lib/student";
 export const metadata = { title: "Application profile" };
 
 export default async function ApplicationProfile({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ rubric?: string }> }) {
-  const [{ id }, { db, profile }, search] = await Promise.all([params, requireSession(), searchParams]);
+  const [{ id }, { db, profile, demo }, search] = await Promise.all([params, requireSession(), searchParams]);
   if (!/^SEL-\d{4}$/.test(id)) notFound();
   const admin = profile.role === "admin";
   const [{ cycle }, [applicant], panel, versions] = await Promise.all([
@@ -54,7 +54,7 @@ export default async function ApplicationProfile({ params, searchParams }: { par
             {applicant.duplicate_of && <div><dt>Duplicate of</dt><dd>{applicant.duplicate_of}</dd></div>}
           </dl><Notice><strong>{ELIGIBILITY[applicant.eligibility]}</strong><p>{applicant.eligibility_reason}</p></Notice>
           {admin && <><p className="tiny muted">Rule check · {ELIGIBILITY[assessment.status]}. {assessment.reason}</p>
-            <AdminDialog action="Eligibility updated" entity={id} status={applicant.eligibility} disabled={cycle.locked} />
+            <AdminDialog action="Eligibility updated" entity={id} status={applicant.eligibility} disabled={cycle.locked || demo} />
           </>}</div>
         </Card>
         {admin && <Card><CardHeading title="Review panel" description={`Rubric v${rubric} · ${assigned.filter((r) => r.status === "submitted").length} of 5 submitted`} />
@@ -69,11 +69,11 @@ export default async function ApplicationProfile({ params, searchParams }: { par
                 <div className="split-actions"><strong className="label">{person.name}</strong>{review ? <ReviewPill value={review.status} /> : <span className="tiny muted">Unassigned</span>}</div>
                 {review && <div className="split-actions">
                   <Link className="text-link" href={`/reviews/${review.id}`}>Inspect review {review.raw_score == null ? "" : `· ${score(review.raw_score)}`} <ArrowRight size={13} /></Link>
-                  {!historical && review.status === "pending" && <AdminDialog action="Assignment removed" entity={review.id} label="Remove" disabled={cycle.locked} />}
+                  {!historical && review.status === "pending" && <AdminDialog action="Assignment removed" entity={review.id} label="Remove" disabled={cycle.locked || demo} />}
                 </div>}
               </div>;
             }) : <Empty title="Panel not provisioned" description="Provision the five reviewer seats first." />}
-            {!historical && assigned.length < 5 && applicant.eligibility === "eligible" && <AdminDialog action="Assignments restored" entity={id} disabled={cycle.locked} />}
+            {!historical && assigned.length < 5 && applicant.eligibility === "eligible" && <AdminDialog action="Assignments restored" entity={id} disabled={cycle.locked || demo} />}
           </div>
         </Card>}
       </div>

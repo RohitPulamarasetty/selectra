@@ -8,7 +8,7 @@ import {
   ChevronRight, House, ListChecks, LockKeyhole, LogOut, Menu, PanelLeftClose, PanelLeftOpen, Search, Settings2,
   UsersRound, FolderOpen, type LucideIcon,
 } from "lucide-react";
-import { DemoLabel, Avatar, Brand, CreatorCredit } from "@/components/common";
+import { DemoLabel, Avatar, Brand, CreatorCredit, Notice } from "@/components/common";
 import { WorkspaceSearch } from "@/components/workspace-search";
 import { Button, cn } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -35,7 +35,7 @@ const navigation: { group: string; items: NavItem[] }[] = [
   ] },
 ];
 
-export function Shell({ profile, cycle, children }: { profile: Profile; cycle: Cycle; children: ReactNode }) {
+export function Shell({ profile, cycle, demo, children }: { profile: Profile; cycle: Cycle; demo: boolean; children: ReactNode }) {
   const [drawer, setDrawer] = useState(false);
   const [search, setSearch] = useState(false);
   const [compact, setCompact] = useState(false);
@@ -135,7 +135,7 @@ export function Shell({ profile, cycle, children }: { profile: Profile; cycle: C
           </details>
         </div>
       </header>
-      <main id="main-content" className="main-content">{children}<footer className="main-footer"><DemoLabel /><CreatorCredit /><Link href="/">Selectra home <ArrowUpRight size={12} /></Link></footer></main>
+      <main id="main-content" className="main-content">{demo && <div className="mb-3"><Notice>Public demo · Read-only sample workspace</Notice></div>}{children}<footer className="main-footer"><DemoLabel /><CreatorCredit /><Link href="/">Selectra home <ArrowUpRight size={12} /></Link></footer></main>
     </div>
   </div>;
 }

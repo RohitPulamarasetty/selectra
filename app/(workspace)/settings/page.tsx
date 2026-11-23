@@ -9,7 +9,7 @@ import { CRITERIA, dateLabel, type Audit, type Profile, type Rubric } from "@/li
 export const metadata = { title: "Settings" };
 
 export default async function Settings({ searchParams }: { searchParams: Promise<{ auditPage?: string }> }) {
-  const [{ db }, { cycle, rubric }, params] = await Promise.all([requireSession(true), cycleContext(), searchParams]);
+  const [{ db, demo }, { cycle, rubric }, params] = await Promise.all([requireSession(true), cycleContext(), searchParams]);
   const page = typeof params.auditPage === "string" && /^\d{1,5}$/.test(params.auditPage) ? Math.max(1, Number(params.auditPage)) : 1;
   const [versions, entries, [{ count }], people] = await Promise.all([
     db.rows<Rubric>("select * from public.rubrics order by version desc"),
@@ -27,8 +27,8 @@ export default async function Settings({ searchParams }: { searchParams: Promise
             <dl className="facts"><div><dt>Panel size</dt><dd>5 evaluators</dd></div><div><dt>Minimum overlap</dt><dd>{cycle.min_overlap} applications</dd></div>
               <div><dt>Disagreement threshold</dt><dd>{cycle.disagreement_threshold} points</dd></div><div><dt>Close cutoff threshold</dt><dd>{cycle.close_threshold} points</dd></div></dl>
             <div className="inline-actions">
-              <AdminDialog key={String(cycle.locked)} action={cycle.locked ? "Cycle reopened" : "Cycle locked"} entity="1" />
-              <AdminDialog key={String(cycle.intake_open)} action={cycle.intake_open ? "Intake paused" : "Intake opened"} entity="1" />
+              <AdminDialog key={String(cycle.locked)} action={cycle.locked ? "Cycle reopened" : "Cycle locked"} entity="1" disabled={demo} />
+              <AdminDialog key={String(cycle.intake_open)} action={cycle.intake_open ? "Intake paused" : "Intake opened"} entity="1" disabled={demo} />
             </div>
             <p className="tiny muted">Student submissions {cycle.intake_open && !cycle.locked ? "are open." : "are paused."}</p>
           </div>
@@ -36,7 +36,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
         <Card><CardHeading title="Active rubric" description="Every rating uses the same 1–5 scale"><Pill tone="green">Version {rubric.version}</Pill></CardHeading>
           <div className="card-body stack">
             {CRITERIA.map((criterion, i) => <div className="split-actions" key={criterion.name}><span className="label">{criterion.name}</span><span className="pill">{rubric.weights[i]}%</span></div>)}
-            <AdminDialog action="Rubric revised" entity="1" weights={rubric.weights} disabled={cycle.locked} />
+            <AdminDialog action="Rubric revised" entity="1" weights={rubric.weights} disabled={cycle.locked || demo} />
           </div>
         </Card>
       </div>

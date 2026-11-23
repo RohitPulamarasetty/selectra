@@ -1,7 +1,8 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
-import { demoRoleForEmail } from "@/lib/demo-preview";
+import { demoRoleForEmail, type DemoRole } from "@/lib/demo-preview";
+import { demoIdentity, demoLifetimeSeconds, demoRoleFromToken, makeDemoToken } from "@/lib/demo-session";
 import { database } from "@/lib/db/server";
 import { digest, hashPassword, verifyPassword } from "@/lib/db/password.mjs";
 import type { Profile } from "@/lib/model";
@@ -15,14 +16,18 @@ const cookieOptions = {
   path: "/",
 };
 
-export async function currentProfile() {
+export async function currentIdentity() {
   const token = (await cookies()).get(cookieName)?.value;
-  if (!token || !/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
-  const { rows } = await (await database()).query<Profile>(`
+  if (!token) return null;
+  const demoRole = demoRoleFromToken(token);
+  if (demoRole) return demoIdentity(demoRole);
+  if (!/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
+  const db = await database();
+  const { rows } = await db.query<Profile>(`
     select p.* from auth.sessions s join public.profiles p on p.id=s.user_id
     where s.token_hash=$1 and s.expires_at>now() and p.active
   `, [digest(token)]);
-  return rows[0] ?? null;
+  return rows[0] ? { profile: rows[0], db, demo: false as const } : null;
 }
 
 async function createSession(userId: string) {
@@ -37,10 +42,23 @@ async function createSession(userId: string) {
   store.set(cookieName, token, { ...cookieOptions, maxAge: lifetimeSeconds });
 }
 
+export async function demoSignIn(role: DemoRole) {
+  const { profile } = await demoIdentity(role);
+  const store = await cookies();
+  await revokeStoredSession(store.get(cookieName)?.value);
+  store.set(cookieName, makeDemoToken(role), { ...cookieOptions, maxAge: demoLifetimeSeconds });
+  return profile.role;
+}
+
+async function revokeStoredSession(token: string | undefined) {
+  if (token && /^[A-Za-z0-9_-]{43}$/.test(token)) {
+    await (await database()).query("delete from auth.sessions where token_hash=$1", [digest(token)]);
+  }
+}
+
 export async function endSession() {
   const store = await cookies();
-  const token = store.get(cookieName)?.value;
-  if (token) await (await database()).query("delete from auth.sessions where token_hash=$1", [digest(token)]);
+  await revokeStoredSession(store.get(cookieName)?.value);
   store.set(cookieName, "", { ...cookieOptions, maxAge: 0 });
 }
 

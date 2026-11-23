@@ -117,6 +117,7 @@ export function reviewRows(panel, weights, startTime) {
     const submitted = !ratings.includes(null);
     const timestamp = new Date(startTime + applicantIndex * 86400_000 + index * 5400_000).toISOString();
     return {
+      id: `00000000-0000-4000-8000-0000000000${applicantIndex + 1}${index + 1}`,
       application_id: demoApplications[applicantIndex].id,
       evaluator_id: panel[index].id,
       status: submitted ? "submitted" : "draft",

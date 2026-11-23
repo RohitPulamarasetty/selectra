@@ -11,4 +11,4 @@ export function dataDirectory(): string;
 export function credentialDirectory(): string;
 export function applyMigrations(db: Database): Promise<void>;
 export function openDatabase(options?: { migrate?: boolean }): Promise<{ db: Database; close(): Promise<void> }>;
-export function asUser<T>(db: Database, userId: string, operation: (tx: SqlConnection) => Promise<T>): Promise<T>;
+export function asUser<T>(db: Database, userId: string, operation: (tx: SqlConnection) => Promise<T>, options?: { readOnly?: boolean }): Promise<T>;

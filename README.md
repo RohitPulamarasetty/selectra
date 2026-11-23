@@ -2,13 +2,13 @@
 
 An admissions workspace for applications, independent reviews, and shortlists. The demo includes eight fictional applications.
 
-Choose a demo role on the sign-in page. Public demo credentials open the same sample pages. Create a student account to save drafts and submit an application.
+Choose a demo role on the sign-in page. One-click access and public demo credentials open the real dashboards with a separate, read-only sample cohort. Create a student account to save drafts and submit an application.
 
 ## Run locally
 
 With Node.js 22.12 or newer, run `npm run demo` and open **http://localhost:3000**. The terminal prints paths to the generated sign-ins under `.selectra-data`.
 
-## Load demo data into Neon
+## Set up a workspace in Neon
 
 1. Open **Connect** in Neon. Select the branch and database your Vercel app will use, then copy the pooled connection string.
 2. Set that string as `DATABASE_URL` in `.env.local` and in Vercel.

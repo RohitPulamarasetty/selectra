@@ -4,13 +4,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { credentialDirectory, openDatabase } from "../lib/db/engine.mjs";
 import { hashPassword } from "../lib/db/password.mjs";
-import { demoApplications, reviewRows } from "./demo-data.mjs";
-
-const reviewerNames = ["Priya Nambiar", "Daniel D’Souza", "Kavya Iyer", "Rohan Bhat", "Sara Mathew"];
-
-function label(name) {
-  return name.toLowerCase().replace(/[’']/g, "").replaceAll(" ", ".");
-}
+import { insertAccount, insertDemo, label, reviewerNames } from "./demo-seed.mjs";
 
 function identity(name, role, seat = null) {
   const domain = (process.env.SELECTRA_DEMO_DOMAIN || "selectracampus.test").toLowerCase();
@@ -32,54 +26,6 @@ async function credentials(file, people) {
   return accounts;
 }
 
-async function insertAccount(tx, account) {
-  const { rows: [user] } = await tx.query(
-    "insert into auth.users(email,password_hash,raw_user_meta_data) values ($1,$2,$3) returning id",
-    [account.email, await hashPassword(account.password), { name: account.name }],
-  );
-  if (account.role !== "student") {
-    await tx.query("update public.profiles set role=$2,seat=$3 where id=$1", [user.id, account.role, account.seat]);
-  }
-  return user.id;
-}
-
-async function insertDemo(tx, studentId) {
-  const { rows: [cycle] } = await tx.query("select c.rubric_version,r.weights from public.cycles c join public.rubrics r on r.version=c.rubric_version where c.id=1");
-  const { rows: panel } = await tx.query("select id from public.profiles where role='evaluator' order by seat");
-  const applications = demoApplications.map((entry, index) => ({
-    email: `${label(entry.name)}@students.selectracampus.test`,
-    declaration: true,
-    submitted_at: new Date(Date.now() - (12 - index) * 86400_000).toISOString(),
-    ...entry,
-  }));
-  await tx.query(`
-    insert into public.applications(id,name,email,location,education,academic,subjects,skills,motivation,statement,
-      projects,extracurricular,notes,declaration,submitted_at,eligibility,eligibility_reason)
-    select id,name,email,location,education,academic,subjects,skills,motivation,statement,projects,extracurricular,
-      notes,declaration,submitted_at,eligibility,eligibility_reason
-    from jsonb_populate_recordset(null::public.applications,$1)
-  `, [JSON.stringify(applications)]);
-  const reviews = reviewRows(panel, cycle.weights, Date.now() - 6 * 86400_000);
-  await tx.query(`
-    insert into public.reviews(application_id,evaluator_id,rubric_version,status,ratings,comments,feedback,
-      raw_score,version,seeded,updated_at,submitted_at)
-    select application_id,evaluator_id,$2,status,ratings,comments,feedback,raw_score,version,seeded,updated_at,submitted_at
-    from jsonb_populate_recordset(null::public.reviews,$1)
-  `, [JSON.stringify(reviews), cycle.rubric_version]);
-  const ishan = demoApplications.find((entry) => entry.id === "SEL-0007");
-  const { location, education, academic, subjects, skills, motivation, statement, projects, extracurricular, notes } = ishan;
-  const answers = { location, education, academic: String(academic), subjects: subjects.join(", "), skills: skills.join(", "), motivation, statement, projects, extracurricular, notes, declaration: true };
-  await tx.query("insert into public.student_applications(owner_id,application_id,data,version) values($1,$2,$3,1)", [studentId, ishan.id, answers]);
-  await tx.query("insert into public.student_clarifications(application_id,question) values($1,$2)", [
-    ishan.id, "Which terms are included in the 82% aggregate you reported? Please list the term numbers.",
-  ]);
-  await tx.exec(`
-    update public.cycles set name='Data Science Foundations · Practice intake',min_overlap=3,revision=revision+1 where id=1;
-    insert into public.audit(action,entity,detail) values('Practice cohort seeded','1','{"synthetic":true,"applications":8,"assignments":25}');
-    insert into auth.demo_setup values (true);
-  `);
-}
-
 export async function setup({ demo = false, quiet = false } = {}) {
   const folder = credentialDirectory();
   await mkdir(folder, { recursive: true, mode: 0o700 });
@@ -98,12 +44,12 @@ export async function setup({ demo = false, quiet = false } = {}) {
         const accounts = await credentials(staffFile, [identity("Aditi Shah", "admin"),
           ...reviewerNames.map((name, index) => identity(name, "evaluator", index + 1)),
         ]);
-        for (const account of accounts) await insertAccount(tx, account);
+        for (const account of accounts) await insertAccount(tx, account, await hashPassword(account.password));
       }
       if (demo && !state.demo) {
         if (state.applications) throw new Error("Use an empty database to add the example cohort. This workspace already has applications.");
         const [account] = await credentials(studentFile, [identity("Ishan Kulkarni", "student")]);
-        await insertDemo(tx, await insertAccount(tx, account));
+        await insertDemo(tx, await insertAccount(tx, account, await hashPassword(account.password)));
       }
     });
     if (!quiet) {
