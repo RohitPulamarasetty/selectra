@@ -38,7 +38,7 @@ export default async function SelectionReport({ searchParams }: { searchParams: 
         <p className="tiny">{CRITERIA.map((criterion, index) => `${criterion.name} ${weights[index]}%`).join(" · ")}</p>
         {item && <p className="tiny"><strong>Publication reason.</strong> {item.reason}</p>}
       </Card>
-      <Card><div className="table-scroll"><table className="data-table print-table"><caption className="sr-only">Selection results</caption>
+      <Card><div className="table-scroll" tabIndex={0} role="region" aria-label="Selection results"><table className="data-table print-table"><caption className="sr-only">Selection results</caption>
         <thead><tr>{["Rank", "Application ID", "Applicant", "Raw mean", "Normalized", "Reviews", "Selection"].map((label) => <th key={label} scope="col">{label}</th>)}</tr></thead>
         <tbody>{rows.map((row) => <tr key={row.id}><td>{row.rank}</td><td>{row.id}</td><td>{row.name}</td><td>{score(row.raw)}</td><td>{score(row.normalized)}</td><td>{row.reviews}/5</td><td>{item ? "Shortlisted" : "Provisional"}</td></tr>)}
           {!rows.length && <tr><td colSpan={7}>No eligible applicants have completed the full panel.</td></tr>}</tbody>

@@ -35,13 +35,13 @@ test("administrator signs in, uses the sidebar and keyboard search, and signs ou
     await nav.getByRole("link", { name: link, exact: true }).click();
     await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible();
   }
-  await page.getByRole("button", { name: "Search applicants" }).click();
+  await page.getByRole("button", { name: "Find anything" }).click();
   await page.getByLabel("Search query").fill("SEL-0006");
   await page.getByRole("button", { name: "Search directory" }).click();
   await expect(page.getByRole("row")).toHaveCount(2);
   await page.getByText("SEL-0006", { exact: true }).click();
   await expect(page.getByRole("heading", { name: "Arjun Menon" })).toBeVisible();
-  await page.getByLabel("Account menu", { exact: true }).press("Enter");
+  await page.getByRole("button", { name: /^Account menu for / }).press("Enter");
   await page.getByRole("button", { name: "Sign out" }).click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto("/settings");
@@ -93,6 +93,7 @@ test("reviewer mobile navigation and access boundaries", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Page unavailable" })).toBeVisible();
   await page.goto("/rankings");
   await expect(page.getByRole("heading", { name: "Page unavailable" })).toBeVisible();
+  await expect(page.getByRole("main")).toHaveCount(1);
   expect((await page.request.get("/api/exports/evaluations")).status()).toBe(403);
 });
 

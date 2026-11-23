@@ -24,7 +24,7 @@ export default async function Reviews() {
         const done = reviews.filter((r) => ids.has(r.application_id) && r.evaluator_id === p.id && r.status === "submitted").length;
         return <div key={p.id} className="progress-person">
           <span className="identity"><Avatar name={p.name} variant={i} /><strong>{p.name}</strong></span>
-          <div className="progress-track" aria-label={`${p.name}: ${done} of ${eligible.length} reviews`}><span style={{ width: `${percent(done, eligible.length)}%` }} /></div>
+          <div className="progress-track" role="progressbar" aria-label={`${p.name} review progress`} aria-valuenow={percent(done, eligible.length)} aria-valuetext={`${done} of ${eligible.length} reviews submitted`}><span style={{ width: `${percent(done, eligible.length)}%` }} /></div>
           <span className="progress-value"><strong>{done}</strong> / {eligible.length}</span>
         </div>;
       }) : <Empty title="No evaluator accounts" description="Provision a panel before assigning applications." />}</div>

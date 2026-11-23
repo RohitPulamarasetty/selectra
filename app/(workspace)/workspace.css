@@ -32,11 +32,12 @@
 .cycle-indicator { width: 5px; height: 5px; border-radius: 50%; background: #a7e0c1; }
 .cycle-indicator-locked { background: #ffcb8b; }
 .sidebar-compact .sidebar-brand { justify-content: center; padding-inline: 0; }
-.sidebar-compact .sidebar-brand .brand > span:last-child, .sidebar-compact .side-command span, .sidebar-compact .side-command kbd,
+.sidebar-compact .sidebar-brand .brand > span:last-child, .sidebar-compact .side-command kbd,
 .sidebar-compact .sidebar .nav-label, .sidebar-compact .sidebar .nav-link > span, .sidebar-compact .cycle-side-copy,
 .sidebar-compact .cycle-side > svg { display: none; }
 .sidebar-compact .sidebar .nav-link { justify-content: center; padding-inline: 0; }
 .sidebar-compact .side-command { justify-content: center; }
+.sidebar-compact .side-command span { position: absolute; width: 1px; height: 1px; margin: -1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
 .sidebar-compact .sidebar .nav-group:not(:first-child) { border-top: 1px solid #3f6b59; padding-top: 9px; }
 .sidebar-compact .app-body .topbar { padding-left: 22px; }
 .sidebar-compact .sidebar .side-nav { gap: 6px; }
@@ -92,9 +93,9 @@
 .app-shell .workflow-shortcuts a:hover { transform: translateY(-2px); }
 .app-shell .rating-active { background: #f6f3e9; color: #285741; border-color: #83ab97; }
 .app-shell .scoring-total { background: #f7f5ed; color: #42725e; border-color: #eeebdd; }
-.review-progress { margin: 0 14px 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: #53816e; font-size: 10px; }
+.review-progress { margin: 0 14px 10px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: #3d6755; font-size: 10px; }
 .review-progress progress { width: 63px; height: 5px; accent-color: #6fb497; }
-.review-progress a { margin-left: auto; color: #4b9174; font-weight: 670; }
+.review-progress a { margin-left: auto; color: #2d6b51; font-weight: 670; }
 .review-progress a:hover { text-decoration: underline; }
 .app-shell .scoring-actions { position: sticky; bottom: 0; z-index: 5; background: #fff; border-top: 1px solid #eceade; box-shadow: 0 -4px 16px #2a4d3e0a; border-radius: 0 0 9px 9px; }
 @media (max-width: 500px) {

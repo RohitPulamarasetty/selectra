@@ -4,7 +4,7 @@
 .public-guide footer > a { display: inline-flex; gap: 5px; align-items: center; color: var(--accent-strong); font-weight: 650; }
 .public-guide footer > a:hover { text-decoration: underline; }
 .public-guide .creator-credit { margin-inline-start: auto; }
-.method-guide { --mg-ink: #264236; --mg-muted: #4d7564; --mg-accent: #53a381; --mg-line: #ebe8da; color: var(--mg-ink); }
+.method-guide { --mg-ink: #264236; --mg-muted: #4d7564; --mg-accent: #28674c; --mg-line: #ebe8da; color: var(--mg-ink); }
 .guide-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(130px, .24fr); position: relative; isolation: isolate; gap: 14px; padding: clamp(19px, 3.8vw, 51px); overflow: hidden; color: #fcfbf6; background: #1c4231; }
 .guide-hero::before { z-index: -1; inset: 0 0 0 32%; position: absolute; content: ""; opacity: .45; background: repeating-linear-gradient(135deg, transparent 0 40px, #6ba78e 40px 41px, transparent 41px 68px); mask-image: linear-gradient(90deg, transparent, black); }
 .guide-label { color: #f6f4e8; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 650; }
@@ -34,7 +34,7 @@
 .guide-section > p, .guide-details li, .guide-rules li { color: var(--mg-muted); font-size: 13px; line-height: 1.57; }
 .guide-workflow { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1px; background: var(--mg-line); border: 1px solid var(--mg-line); }
 .guide-workflow li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 7px; background: #fcfcf9; min-width: 0; padding: 10px; }
-.guide-step { display: grid; place-items: center; width: 25px; height: 25px; color: #509a7b; background: #f8f6ed; font-size: 12px; font-weight: 700; }
+.guide-step { display: grid; place-items: center; width: 25px; height: 25px; color: #28674c; background: #f8f6ed; font-size: 12px; font-weight: 700; }
 .guide-workflow small, .guide-workflow strong { display: block; }
 .guide-workflow strong { font-size: 13px; }
 .guide-workflow small, .guide-workflow p { font-size: 11px; color: var(--mg-muted); }
@@ -55,7 +55,7 @@
 .lab-label span { display: block; font-size: 10px; color: var(--mg-muted); }
 .lab-row input, .calibration-field input { width: 100%; min-width: 0; accent-color: var(--mg-accent); cursor: pointer; }
 .lab-points { font-size: 10px; text-align: right; color: var(--mg-muted); font-variant-numeric: tabular-nums; }
-.lab-points b { display: block; color: #4a8b70; }
+.lab-points b { display: block; color: #2c674f; }
 .score-lab-result { padding: 12px 5px; display: grid; justify-items: center; align-content: center; gap: 9px; background: #f4f1e5; }
 .score-lab-result > span { display: flex; align-items: center; gap: 4px; color: var(--mg-accent); font-weight: 680; font-size: 11px; }
 .score-lab-result > p { font-size: 10px; color: var(--mg-muted); text-align: center; }
@@ -70,13 +70,13 @@
 .guide-details ul { list-style: disc; margin-top: 5px; }
 .guide-details ol, .guide-rules { list-style: decimal; }
 .guide-rules { margin: 0; display: grid; gap: 4px; }
-.guide-formula { border-left: 3px solid #8ac5ac; background: #f9f8f1; padding: 7px 9px; color: #447c65; font-size: 12px; font-weight: 625; }
+.guide-formula { border-left: 3px solid #8ac5ac; background: #f9f8f1; padding: 7px 9px; color: #2d624c; font-size: 12px; font-weight: 625; }
 .calibration-lab { background: #fcfbf8; border: 1px solid #e7e2cf; }
 .calibration-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .calibration-field { min-width: 0; padding: 8px; border: 1px solid #f2efe2; display: grid; align-content: start; gap: 2px; background: white; }
 .calibration-field label, .calibration-field > span { font-weight: 670; font-size: 11px; }
 .calibration-field > p, .calibration-field output { font: 680 22px/1.03 var(--font-display); font-variant-numeric: tabular-nums; }
-.calibration-result { background: #f4f1e5; color: #47866c; }
+.calibration-result { background: #f4f1e5; color: #2a614a; }
 .calibration-result > p { color: var(--mg-muted); font: 600 10px/1.3 var(--font-sans); }
 @media (max-width: 730px) {
   .guide-layout { grid-template-columns: 1fr; }

@@ -132,9 +132,9 @@ kbd { margin-left: auto; border: 1px solid #e3e9e2; background: #fff; border-rad
 .card-padded { padding: 18px; }
 .text-link { display: inline-flex; align-items: center; gap: 4px; color: #236248; font-size: 12px; font-weight: 650; white-space: nowrap; }
 .text-link:hover { text-decoration: underline; }
-.avatar { width: 34px; height: 34px; display: inline-grid; place-items: center; border-radius: 50%; background: #f3f1e5; color: #467d66; font-size: 11px; font-weight: 720; flex: 0 0 auto; }
+.avatar { width: 34px; height: 34px; display: inline-grid; place-items: center; border-radius: 50%; background: #f3f1e5; color: #376952; font-size: 11px; font-weight: 720; flex: 0 0 auto; }
 .avatar-small { width: 31px; height: 31px; font-size: 10px; }
-.avatar-1 { background: #efeee5; color: #4a7663; }
+.avatar-1 { background: #efeee5; color: #3e6a57; }
 .avatar-2 { background: #e1edf1; color: #335d70; }
 .avatar-3 { background: #f4e8da; color: #825731; }
 .avatar-4 { background: #f1e4e6; color: #774852; }
@@ -274,7 +274,7 @@ textarea.input { min-height: 65px; resize: vertical; }
 .facts dt { color: var(--muted); font-size: 11px; }
 .facts dd { margin: 2px 0 0; font-size: 12px; font-weight: 570; overflow-wrap: anywhere; }
 .chips { display: flex; gap: 4px; flex-wrap: wrap; }
-.back-link { display: flex; align-items: center; gap: 5px; width: max-content; font-size: 11.5px; font-weight: 620; margin-bottom: 10px; color: #4f8971; }
+.back-link { display: flex; align-items: center; gap: 5px; width: max-content; font-size: 11.5px; font-weight: 620; margin-bottom: 10px; color: #32684f; }
 .back-link:hover { text-decoration: underline; }
 
 .login-form { display: grid; gap: 14px; margin-top: 23px; }
@@ -418,7 +418,8 @@ textarea.input { min-height: 65px; resize: vertical; }
   .topbar-actions { gap: 7px; }
   .breadcrumbs { gap: 4px; }
   .account-menu { padding-left: 6px; }
-  .account-name, .global-search span, .breadcrumb-root { display: none; }
+  .breadcrumb-root { display: none; }
+  .account-name, .global-search span { position: absolute; min-width: 0; width: 1px; height: 1px; margin: -1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
   .global-search { min-height: 34px; min-width: 34px; justify-content: center; padding: 4px; }
   .page-intro { align-items: flex-start; flex-direction: column; gap: 9px; margin-bottom: 16px; }
   .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -468,7 +469,7 @@ textarea.input { min-height: 65px; resize: vertical; }
 .workflow-shortcuts a > svg { margin-left: auto; color: #4a7e68; }
 .workflow-shortcuts strong, .workflow-shortcuts small { display: block; line-height: 1.3; }
 .workflow-shortcuts strong { font-size: 11px; font-weight: 680; }
-.workflow-shortcuts small { color: #52806d; font-size: 10px; margin-top: 2px; }
+.workflow-shortcuts small { color: #416b58; font-size: 10px; margin-top: 2px; }
 @media (max-width: 550px) { .workflow-shortcuts { grid-template-columns: 1fr; gap: 5px; } }
 
 @media (max-width: 365px) {

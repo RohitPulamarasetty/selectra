@@ -9,7 +9,7 @@ const dimension = { width: 240, height: 150 };
 export function ActivityChart({ points }: { points: { day: string; reviews: number }[] }) {
   return <div className="chart-box chart-box-compact" role="img" aria-label={points.map((p) => `${p.day}: ${p.reviews} submissions`).join(", ")}>
     <ResponsiveContainer initialDimension={dimension}>
-      <AreaChart data={points} margin={{ top: 6, left: 0, right: 14, bottom: 0 }}>
+      <AreaChart accessibilityLayer={false} data={points} margin={{ top: 6, left: 0, right: 14, bottom: 0 }}>
         <CartesianGrid vertical={false} stroke="#ded0b6" strokeDasharray="3 4" />
         <XAxis dataKey="day" tick={textStyle} tickLine={false} axisLine={false} minTickGap={21} />
         <YAxis width={31} allowDecimals={false} axisLine={false} tickLine={false} tick={textStyle} />
@@ -23,9 +23,9 @@ export function ActivityChart({ points }: { points: { day: string; reviews: numb
 export function StatusChart({ points }: { points: { name: string; value: number; fill: string }[] }) {
   const total = points.reduce((sum, item) => sum + item.value, 0);
   return <div className="eligibility-wrap">
-    <div className="eligibility-chart" aria-hidden="true">
+    <div className="eligibility-chart" inert>
       <ResponsiveContainer initialDimension={{ width: 142, height: 142 }}>
-        <PieChart><Pie data={total ? points.filter((point) => point.value > 0) : [{ value: 1, fill: "#ebe5d7" }]} dataKey="value"
+        <PieChart accessibilityLayer={false}><Pie data={total ? points.filter((point) => point.value > 0) : [{ value: 1, fill: "#ebe5d7" }]} dataKey="value"
           nameKey="name" innerRadius={48} outerRadius={61} paddingAngle={total ? 2 : 0} strokeWidth={0} isAnimationActive={false} startAngle={90} endAngle={-270} /></PieChart>
       </ResponsiveContainer>
       <div className="donut-label"><strong>{total}</strong>Applications</div>
@@ -38,7 +38,7 @@ export function ScoreChart({ values }: { values: number[] }) {
   const points = distribution(values);
   return <div className="chart-box chart-box-compact" role="img" aria-label={points.map((p) => `${p.label}: ${p.count}`).join(", ")}>
     <ResponsiveContainer initialDimension={dimension}>
-      <BarChart data={points} margin={{ top: 6, left: 0, right: 6, bottom: 0 }}>
+      <BarChart accessibilityLayer={false} data={points} margin={{ top: 6, left: 0, right: 6, bottom: 0 }}>
         <CartesianGrid vertical={false} stroke="#ded0b6" strokeDasharray="3 4" />
         <XAxis dataKey="label" tick={textStyle} tickLine={false} axisLine={false} minTickGap={7} />
         <YAxis width={30} allowDecimals={false} axisLine={false} tickLine={false} tick={textStyle} />

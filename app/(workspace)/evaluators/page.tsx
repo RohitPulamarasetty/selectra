@@ -21,7 +21,7 @@ export default async function Evaluators() {
     </PageIntro>
     <div className="stack-lg">
       <Card><CardHeading title="Panel progress" description="Active rubric assignments for eligible applications"><TextLink href="/methodology#normalization">Calibration policy</TextLink></CardHeading>
-        <div className="table-scroll"><table className="data-table"><caption className="sr-only">Evaluator progress</caption><thead><tr>
+        <div className="table-scroll" tabIndex={0} role="region" aria-label="Evaluator progress"><table className="data-table"><caption className="sr-only">Evaluator progress</caption><thead><tr>
           {["Evaluator", "Assigned", "Submitted", "Pending", "Completion", "Raw average", "Normalized avg.", "Last activity", "Access"].map((label) => <th key={label} scope="col">{label}</th>)}
         </tr></thead><tbody>
           {panel.map((person, index) => {
@@ -39,7 +39,7 @@ export default async function Evaluators() {
       <div id="flags" className="anchor-offset stack">
         <Card><CardHeading title="Reviewer disagreement" description={`A flag opens when the highest and lowest raw scores differ by at least ${state.threshold} points.`}>
           <Pill tone={flags.some((a) => !a.resolved) ? "amber" : "green"}>{flags.filter((a) => !a.resolved).length} open</Pill></CardHeading>
-          {flags.length ? <div className="table-scroll"><table className="data-table"><caption className="sr-only">Score disagreement flags</caption>
+          {flags.length ? <div className="table-scroll" tabIndex={0} role="region" aria-label="Score disagreement flags"><table className="data-table"><caption className="sr-only">Score disagreement flags</caption>
             <thead><tr><th scope="col">Applicant</th><th scope="col">Raw spread</th><th scope="col">Flag status</th><th scope="col">Review</th></tr></thead><tbody>
               {flags.map((row) => <tr key={row.id}><td><Link className="identity identity-link" href={`/applications/${row.id}`}><span><strong>{row.name}</strong><small>{row.id}</small></span></Link></td>
                 <td><span className="inline-actions"><TriangleAlert size={14} /> {score(row.spread)} points</span></td>

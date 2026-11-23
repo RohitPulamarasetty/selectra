@@ -50,7 +50,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
       <div id="audit" className="anchor-offset">
         <Card><CardHeading title="Audit history" description="Administrator-only record of reviews, eligibility, assignments, and published decisions.">
           <Pill>{count} events</Pill></CardHeading>
-          {entries.length ? <div className="table-scroll"><table className="data-table"><caption className="sr-only">Workspace audit history</caption>
+          {entries.length ? <div className="table-scroll" tabIndex={0} role="region" aria-label="Workspace audit history"><table className="data-table"><caption className="sr-only">Workspace audit history</caption>
             <thead><tr><th scope="col">Event</th><th scope="col">Actor</th><th scope="col">Entity</th><th scope="col">Timestamp (IST)</th><th scope="col">Details</th></tr></thead>
             <tbody>{entries.map((entry) => <tr key={entry.id}>
               <td>{entry.action} {entry.detail.synthetic === true && <Pill>Seeded example</Pill>}</td><td>{entry.actor ? actors.get(entry.actor) ?? "Former workspace member" : "System seed"}</td>

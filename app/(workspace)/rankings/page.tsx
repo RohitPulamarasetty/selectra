@@ -28,7 +28,7 @@ export default async function Rankings() {
       {state.rows.length ? <RankingTable rows={state.rows} threshold={state.threshold} /> : <Card><Empty title="No applicants can be ranked yet" description="An eligible applicant enters the ranking after all five panel members submit." /></Card>}
       <div className="two-col">
         <Card><CardHeading title="Panel calibration" description={`Panel mean ${score(state.panel_mean)} · Overlap ${state.overlap}/${state.minimum} minimum`} />
-          <div className="table-scroll"><table className="data-table"><thead><tr><th>Evaluator</th><th>Common raw mean</th><th>Adjustment</th></tr></thead><tbody>
+          <div className="table-scroll" tabIndex={0} role="region" aria-label="Evaluator calibration"><table className="data-table"><thead><tr><th>Evaluator</th><th>Common raw mean</th><th>Adjustment</th></tr></thead><tbody>
             {state.reviewers.map((r) => <tr key={r.id}><td>{r.name}</td><td>{score(r.reviewer_mean)}</td><td>{state.available && r.adjustment != null ? `${r.adjustment > 0 ? "+" : ""}${score(r.adjustment)}` : "—"}</td></tr>)}
           </tbody></table></div></Card>
         <Card><CardHeading title="Pending review coverage" description={`${state.pending} eligible applicants awaiting a complete panel`} />

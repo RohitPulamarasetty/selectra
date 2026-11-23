@@ -86,10 +86,10 @@ export function Shell({ profile, cycle, demo, children }: { profile: Profile; cy
 
   return <div className={cn("app-shell", compact && "sidebar-compact")}>
     <a href="#main-content" className="skip-link">Skip to content</a>
-    <aside className="sidebar" id="workspace-sidebar">
+    <aside className="sidebar" id="workspace-sidebar" aria-label="Workspace sidebar">
       <Link href="/dashboard" prefetch={false} className="sidebar-brand" aria-label="Selectra overview"><Brand /></Link>
-      <button type="button" className="side-command" aria-label="Open workspace search" title="Open workspace search (Ctrl K)" onClick={() => setSearch(true)}>
-        <Search size={16} /><span>Search workspace</span><kbd>Ctrl K</kbd>
+      <button type="button" className="side-command" aria-keyshortcuts="Control+K Meta+K" title="Open workspace search (Ctrl K)" onClick={() => setSearch(true)}>
+        <Search size={16} /><span>Search workspace</span><kbd aria-hidden="true">Ctrl K</kbd>
       </button>
       {menu}
       <div className="side-footer">
@@ -120,13 +120,14 @@ export function Shell({ profile, cycle, demo, children }: { profile: Profile; cy
         <div className="topbar-actions">
           <div className="topbar-demo"><DemoLabel /></div>
           <Dialog open={search} onOpenChange={setSearch}>
-            <DialogTrigger asChild><button className="global-search" aria-label="Search applicants" title="Search the workspace or find an applicant"><Search size={17} /><span>Find anything</span><kbd>Ctrl K</kbd></button></DialogTrigger>
+            <DialogTrigger asChild><button className="global-search" aria-keyshortcuts="Control+K Meta+K" title="Search the workspace or find an applicant"><Search size={17} /><span>Find anything</span><kbd aria-hidden="true">Ctrl K</kbd></button></DialogTrigger>
             <DialogContent title="Search workspace" description="Jump to a page or search the applicant directory." className="command-dialog">
               <WorkspaceSearch commands={commands} navigate={navigate} />
             </DialogContent>
           </Dialog>
           <details className="account-menu">
-            <summary aria-label="Account menu">
+            <summary>
+              <span className="sr-only">Account menu for</span>
               <Avatar name={profile.name} size="small" />
               <span className="account-name"><strong>{profile.name}</strong><small>{admin ? "Administrator" : "Evaluator"}</small></span><ChevronDown size={13} />
             </summary>

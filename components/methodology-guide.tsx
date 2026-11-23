@@ -26,7 +26,7 @@ export function MethodologyGuide({ weights, version, eligibilityVersion, minimum
     </header>
 
     <div className="guide-layout">
-      <aside className="guide-index">
+      <aside className="guide-index" aria-label="Guide contents">
         <nav aria-label="Evaluation guide sections"><p>On this page</p>{sections.map(([id, label]) =>
           <a key={id} href={`#${id}`}>{label}<ArrowUpRight size={13} /></a>)}</nav>
         <p className="guide-disclaimer">This fictional BS Data Science &amp; Applications exercise operates independently of IIT Madras.</p>
