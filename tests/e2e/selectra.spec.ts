@@ -69,7 +69,8 @@ test("native login sends credentials by POST before JavaScript is available", as
       if (new URL(request.url()).searchParams.has("password")) leakedQuery = true;
     });
     await page.goto("/login");
-    await expect(page.locator("form")).toHaveAttribute("method", /post/i);
+    await expect(page.locator("form.login-form")).toHaveAttribute("method", /post/i);
+    await expect(page.getByRole("form", { name: "One-click demo access" })).toHaveAttribute("method", /post/i);
     await login(page, admin);
     expect(leakedQuery).toBe(false);
   } finally {
