@@ -1,13 +1,13 @@
-.student-portal { min-height: 100svh; background: #f8f7f3; color: #264035; }
+.student-portal { min-height: 100svh; background: radial-gradient(ellipse at 70% 0, #e8efe1, transparent 590px), #f8f5ec; color: #264035; }
 .student-wrap { width: min(1150px, calc(100% - clamp(28px, 8vw, 112px))); margin-inline: auto; }
 .student-header { background: #fdfcf9; border-bottom: 1px solid #eeece1; }
 .student-header .student-wrap { display: flex; min-height: 66px; justify-content: space-between; align-items: center; gap: 12px; }
 .student-header .student-wrap > div { display: flex; align-items: center; gap: 12px; }
 .student-brand .brand-mark { background: #58a886; }
 .student-intro { padding: 37px 0 23px; }
-.student-kicker { color: #558c75; font-size: 10px; font-weight: 740; letter-spacing: .13em; text-transform: uppercase; }
+.student-kicker { color: #3c6653; font-size: 10px; font-weight: 740; letter-spacing: .13em; text-transform: uppercase; }
 .student-intro h1 { font-family: var(--font-editorial); font-size: clamp(37px, 6vw, 70px); line-height: 1.02; letter-spacing: -.063em; font-weight: 530; margin: 6px 0 8px; }
-.student-intro > p:last-child { color: #507c69; font-size: clamp(13px, 1.6vw, 16px); }
+.student-intro > p:last-child { color: #38594b; font-size: clamp(13px, 1.6vw, 16px); }
 .student-grid { display: grid; grid-template-columns: minmax(205px, .36fr) minmax(0, 1fr); gap: clamp(13px, 2vw, 26px); align-items: start; }
 .student-sidebar { position: sticky; top: 18px; display: grid; gap: 11px; }
 .student-box { padding: 15px; background: var(--surface); border: 1px solid #eeebe0; border-radius: 9px; min-width: 0; }
@@ -25,7 +25,7 @@
 .student-timeline li > span { width: 21px; height: 21px; display: grid; place-items: center; z-index: 1; border: 1px solid #f0ede0; border-radius: 50%; background: #fbfbf8; color: #88b5a2; }
 .student-timeline li > .milestone-done { color: #4a896f; background: #f4f1e7; border-color: #ece9d8; }
 .student-timeline strong, .student-timeline small { display: block; line-height: 1.35; font-size: 11px; }
-.student-timeline small { color: #507b69; margin-top: 2px; font-size: 10px; }
+.student-timeline small { color: #3b5f4d; margin-top: 2px; font-size: 12px; }
 .student-receipt, .student-form { display: grid; gap: 12px; min-width: 0; }
 .student-demo { display: flex; align-items: center; gap: 9px; background: #f6f4ea; border: 1px solid #f0eddf; padding: 10px 12px; border-radius: 8px; color: #497764; font-size: 12px; }
 .student-demo span { display: grid; place-items: center; flex: 0 0 auto; }
@@ -40,12 +40,12 @@
 .student-section-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .student-section-heading > span { width: 36px; height: 36px; display: grid; place-items: center; background: #f7f6ef; border-radius: 7px; border: 1px solid #efede3; color: #518a72; flex: 0 0 auto; }
 .student-section-heading h2 { font-size: 17px; font-weight: 670; letter-spacing: -.031em; }
-.student-section-heading p { color: #527e6b; font-size: 11px; margin-top: 2px; }
+.student-section-heading p { color: #3b5f4d; font-size: 11px; margin-top: 2px; }
 .student-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
 .student-fields .input { min-height: 40px; }
 .student-written { grid-template-columns: minmax(0, 1fr); }
 .student-written textarea { resize: vertical; }
-.student-checkbox { display: flex; align-items: start; gap: 7px; font-size: 12px; color: #497663; }
+.student-checkbox { display: flex; align-items: start; gap: 7px; font-size: 12px; color: #375b4a; }
 .student-checkbox input { margin-top: 3px; accent-color: #5ba485; }
 .student-form-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 3px 0 18px; }
 .student-form-actions > div:last-child { display: flex; gap: 7px; flex-shrink: 0; flex-wrap: wrap; }
@@ -55,7 +55,7 @@
 .student-receipt-banner > span:first-child { width: 45px; height: 45px; display: grid; place-items: center; background: #fcfbf7; border: 1px solid #efece0; color: #508c73; border-radius: 8px; flex: 0 0 auto; }
 .student-receipt-banner > span:last-child { margin-left: auto; }
 .student-receipt-banner h2 { font-size: 23px; letter-spacing: -.047em; line-height: 1.08; font-weight: 680; margin: 2px 0 3px; }
-.student-receipt-banner p:last-child, .student-decision p:last-child { font-size: 12px; color: #51816d; }
+.student-receipt-banner p:last-child, .student-decision p:last-child { font-size: 14px; color: #3b5f4d; }
 .student-decision { display: grid; gap: 4px; }
 .student-decision h2 { font-size: 19px; }
 .student-submitted-data summary { display: flex; align-items: center; gap: 7px; font-weight: 640; font-size: 12px; color: #477f68; cursor: pointer; }
@@ -66,7 +66,7 @@
 .student-submitted-data dt { font-size: 11px; color: #517b69; font-weight: 620; }
 .student-submitted-data dd { margin: 1px 0 0; color: #2e4b3f; font-size: 12px; overflow-wrap: anywhere; white-space: pre-wrap; }
 .student-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 5px 14px; border-top: 1px solid #edebe0; padding: 13px 0 18px; margin-top: 27px; }
-.student-footer a { color: #4e836d; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
+.student-footer a { color: #305c49; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
 .student-footer a:hover { text-decoration: underline; }
 @media (max-width: 770px) {
   .student-sidebar { position: static; }
@@ -86,7 +86,7 @@
   .student-form-actions { align-items: start; flex-direction: column; }
   .student-receipt-banner { gap: 7px; padding: 10px; }
   .student-receipt-banner h2 { font-size: 18px; }
-  .student-receipt-banner p:last-child { font-size: 10px; }
+  .student-receipt-banner p:last-child { font-size: 12px; }
   .student-receipt-banner > span:first-child { width: 36px; height: 36px; }
 }
 
@@ -108,3 +108,12 @@
 .student-optional summary:hover { text-decoration: underline; text-underline-offset: 3px; }
 .student-optional summary span { color: var(--muted); font-size: 11px; font-weight: 500; margin-inline-start: 4px; }
 .student-optional[open] .student-fields { padding-top: 5px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .student-intro, .student-receipt-banner { animation: student-enter .34s ease-out both; }
+  .student-receipt-banner { animation-delay: 65ms; }
+}
+@keyframes student-enter {
+  from { opacity: .68; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}

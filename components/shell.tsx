@@ -32,6 +32,7 @@ const navigation: { group: string; items: NavItem[] }[] = [
   { group: "Reference", items: [
     { href: "/methodology", label: "Methodology", icon: BookOpenText },
     { href: "/settings", label: "Settings", icon: Settings2, admin: true },
+    { href: "/users", label: "Users", icon: UsersRound, admin: true },
   ] },
 ];
 
@@ -130,7 +131,7 @@ export function Shell({ profile, cycle, demo, children }: { profile: Profile; cy
               <span className="account-name"><strong>{profile.name}</strong><small>{admin ? "Administrator" : "Evaluator"}</small></span><ChevronDown size={13} />
             </summary>
             <div className="account-dropdown"><span><LockKeyhole size={14} /> {admin ? "Administrator" : "Evaluator"} session</span>
-              <form action={signOut} data-account-signout><Button variant="ghost" type="submit"><LogOut size={15} /> Sign out</Button></form>
+              <form action={signOut} data-account-signout><Button variant="outline" className="signout-button" type="submit"><LogOut size={15} /> Sign out</Button></form>
             </div>
           </details>
         </div>

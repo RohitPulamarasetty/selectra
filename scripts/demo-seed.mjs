@@ -20,7 +20,7 @@ export async function insertAccount(tx, account, passwordHash, id = null) {
 
 export async function insertDemo(tx, studentId) {
   const { rows: [cycle] } = await tx.query("select c.rubric_version,r.weights from public.cycles c join public.rubrics r on r.version=c.rubric_version where c.id=1");
-  const { rows: panel } = await tx.query("select id from public.profiles where role='evaluator' order by seat");
+  const { rows: panel } = await tx.query("select id from public.profiles where role='evaluator' and seat is not null order by seat");
   const applications = demoApplications.map((entry, index) => ({
     email: `${label(entry.name)}@students.selectracampus.test`,
     declaration: true,

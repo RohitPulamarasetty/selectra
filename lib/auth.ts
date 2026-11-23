@@ -35,11 +35,15 @@ async function createSession(userId: string) {
   const token = randomBytes(32).toString("base64url");
   const oldToken = store.get(cookieName)?.value;
   const db = await database();
-  await db.transaction(async (tx) => {
+  const created = await db.transaction(async (tx) => {
+    const { rows } = await tx.query("select id from public.profiles where id=$1 and active for share", [userId]);
+    if (!rows.length) return false;
     await tx.query("delete from auth.sessions where expires_at<=now() or token_hash=$1", [oldToken ? digest(oldToken) : null]);
     await tx.query("insert into auth.sessions values ($1,$2,now()+make_interval(secs=>$3))", [digest(token), userId, lifetimeSeconds]);
+    return true;
   });
-  store.set(cookieName, token, { ...cookieOptions, maxAge: lifetimeSeconds });
+  if (created) store.set(cookieName, token, { ...cookieOptions, maxAge: lifetimeSeconds });
+  return created;
 }
 
 export async function demoSignIn(role: DemoRole) {
@@ -88,10 +92,9 @@ export async function passwordSignIn(email: string, password: string) {
     where u.email=$1 and p.active
   `, [address]);
   const account = rows[0];
-  if (!await verifyPassword(password, account?.password_hash) || !account) {
+  if (!await verifyPassword(password, account?.password_hash) || !account || !await createSession(account.id)) {
     return { error: "Sign-in failed. Check your email and password." };
   }
-  await createSession(account.id);
   return { role: account.role };
 }
 
@@ -104,6 +107,6 @@ export async function createStudent(name: string, email: string, password: strin
     values ($1,$2,$3) on conflict(email) do nothing returning id
   `, [address, await hashPassword(password), { name }]);
   if (!rows[0]) return { error: "If you already registered with this email, sign in with your existing password." };
-  await createSession(rows[0].id);
+  if (!await createSession(rows[0].id)) return { error: "This account is unavailable." };
   return { ok: true };
 }

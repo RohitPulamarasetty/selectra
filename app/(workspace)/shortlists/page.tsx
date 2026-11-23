@@ -14,8 +14,9 @@ export default async function Shortlists({ searchParams }: { searchParams: Promi
   const selection = typeof params.snapshot === "string" && /^\d+$/.test(params.snapshot) ? Number(params.snapshot) : null;
   const snapshot = selection ? await getSnapshot(selection) : null;
   const names = new Map(panel.map((p) => [p.id, p.name]));
+  const panelIds = new Set(panel.filter((person) => person.seat !== null).map(({ id }) => id));
   const ranked = new Set(state.rows.map((row) => row.id));
-  const comparisons = reviews.filter((review) => review.status === "submitted" && ranked.has(review.application_id)).map((review) => ({
+  const comparisons = reviews.filter((review) => review.status === "submitted" && ranked.has(review.application_id) && panelIds.has(review.evaluator_id)).map((review) => ({
     application_id: review.application_id, feedback: review.feedback, comments: review.comments,
     ratings: review.ratings, raw_score: review.raw_score, reviewer: names.get(review.evaluator_id) ?? "Evaluator",
   }));

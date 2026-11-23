@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AdminDialog } from "@/components/admin-dialog";
 import { ApplicantEvidence, ApplicantHeading } from "@/components/applicant-profile";
 import { Card, CardHeading, EligibilityPill, Empty, Notice, ReviewPill } from "@/components/common";
+import { SupplementalAssignment } from "@/components/user-management";
 import { Button } from "@/components/ui/button";
 import { cycleContext, evaluators, requireSession } from "@/lib/data";
 import { dateLabel, eligibilityFor, ELIGIBILITY, score, type Application, type Review } from "@/lib/model";
@@ -25,6 +26,13 @@ export default async function ApplicationProfile({ params, searchParams }: { par
   const rubric = versions.find(({ version }) => version === requested)?.version ?? cycle.rubric_version;
   const historical = rubric !== cycle.rubric_version;
   const assigned = await db.rows<Review>("select * from public.reviews where application_id=$1 and rubric_version=$2", [id, rubric]);
+  const panelMembers = panel.filter((person) => person.seat !== null);
+  const panelIds = new Set(panelMembers.map(({ id }) => id));
+  const panelReviews = assigned.filter((review) => panelIds.has(review.evaluator_id));
+  const supplementalReviews = assigned.filter((review) => !panelIds.has(review.evaluator_id));
+  const options = panel.filter((person) => person.seat === null && person.active
+    && !supplementalReviews.some((review) => review.evaluator_id === person.id));
+  const canAssign = !demo && !historical && !cycle.locked && applicant.eligibility === "eligible";
   const assessment = eligibilityFor(applicant);
   const clarifications = admin ? await db.rows<StudentClarification>(
     "select * from public.student_clarifications where application_id=$1 order by id desc limit 20", [id],
@@ -57,13 +65,13 @@ export default async function ApplicationProfile({ params, searchParams }: { par
             <AdminDialog action="Eligibility updated" entity={id} status={applicant.eligibility} disabled={cycle.locked || demo} />
           </>}</div>
         </Card>
-        {admin && <Card><CardHeading title="Review panel" description={`Rubric v${rubric} · ${assigned.filter((r) => r.status === "submitted").length} of 5 submitted`} />
+        {admin && <Card><CardHeading title="Review panel" description={`Rubric v${rubric} · ${panelReviews.filter((r) => r.status === "submitted").length} of 5 submitted`} />
           <div className="card-body stack">
             {versions.length > 1 && <nav aria-label="Review rubric versions" className="tab-list">
               {versions.map(({ version }) => <Link key={version} href={`/applications/${id}?rubric=${version}`} className={version === rubric ? "tab-active" : ""}
                 aria-current={version === rubric ? "page" : undefined}>v{version}{version === cycle.rubric_version ? " · Active" : ""}</Link>)}
             </nav>}
-            {panel.length ? panel.map((person) => {
+            {panelMembers.length ? panelMembers.map((person) => {
               const review = assigned.find((r) => r.evaluator_id === person.id);
               return <div className="review-panel-row" key={person.id}>
                 <div className="split-actions"><strong className="label">{person.name}</strong>{review ? <ReviewPill value={review.status} /> : <span className="tiny muted">Unassigned</span>}</div>
@@ -73,7 +81,18 @@ export default async function ApplicationProfile({ params, searchParams }: { par
                 </div>}
               </div>;
             }) : <Empty title="Panel not provisioned" description="Provision the five reviewer seats first." />}
-            {!historical && assigned.length < 5 && applicant.eligibility === "eligible" && <AdminDialog action="Assignments restored" entity={id} disabled={cycle.locked || demo} />}
+            {!historical && panelReviews.length < 5 && applicant.eligibility === "eligible" && <AdminDialog action="Assignments restored" entity={id} disabled={cycle.locked || demo} />}
+          </div>
+        </Card>}
+        {admin && (supplementalReviews.length > 0 || (canAssign && options.length > 0)) && <Card>
+          <CardHeading title="Supplemental reviews" description="Additional assessments for reference." />
+          <div className="card-body stack">
+            {supplementalReviews.map((review) => <div className="review-panel-row" key={review.id}>
+              <div className="split-actions"><strong className="label">{panel.find((person) => person.id === review.evaluator_id)?.name ?? "Evaluator"}</strong><ReviewPill value={review.status} /></div>
+              <div className="split-actions"><Link className="text-link" href={`/reviews/${review.id}`}>Inspect review <ArrowRight size={13} /></Link>
+                {!historical && review.status === "pending" && <AdminDialog action="Assignment removed" entity={review.id} label="Remove" disabled={cycle.locked || demo} />}</div>
+            </div>)}
+            {canAssign && <SupplementalAssignment application={id} options={options} />}
           </div>
         </Card>}
       </div>

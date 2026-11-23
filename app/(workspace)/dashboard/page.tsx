@@ -40,9 +40,11 @@ export default async function Dashboard() {
     admin ? auditLog() : Promise.resolve([]),
     admin ? snapshotList() : Promise.resolve([]),
   ]);
+  const panelMembers = admin ? panel.filter((person) => person.seat !== null) : panel;
+  const panelIds = new Set(panelMembers.map(({ id }) => id));
   const eligible = records.filter((a) => a.eligibility === "eligible");
   const eligibleIds = new Set(eligible.map((a) => a.id));
-  const reviews = allReviews.filter((r) => eligibleIds.has(r.application_id));
+  const reviews = allReviews.filter((r) => eligibleIds.has(r.application_id) && panelIds.has(r.evaluator_id));
   const submitted = reviews.filter((r) => r.status === "submitted").length;
   const panelTotal = admin ? eligible.length * 5 : reviews.length;
   const pending = admin ? panelTotal - submitted : reviews.length - submitted;
@@ -71,7 +73,7 @@ export default async function Dashboard() {
         </div></div><div className="cycle-banner-right"><strong>{completion}%</strong><small>Review completion</small><progress aria-label="Review completion" value={submitted} max={panelTotal || 1} /></div>
       </section>
       <div className="stats-grid">
-        <Stat title={admin ? "Total applications" : "Assigned applicants"} value={records.length} detail={admin ? "Fictional applications received" : "Applications available to review"} icon={Users} />
+        <Stat title={admin ? "Total applications" : "Assigned applicants"} value={records.length} detail={admin ? "Applications received" : "Applications available to review"} icon={Users} />
         {admin ? <Stat title="Eligible applications" value={eligible.length} detail={<><strong>{percent(eligible.length, records.length)}%</strong> of the applicant pool</>} icon={ShieldCheck} />
           : <Stat title="Draft reviews" value={reviews.filter((r) => r.status === "draft").length} detail="Ready to resume" icon={ScanLine} />}
         <Stat title="Reviews submitted" value={submitted} suffix={`/ ${panelTotal}`} detail={<>{pending} review{pending === 1 ? "" : "s"} remaining</>} icon={ClipboardCheck} />
@@ -87,7 +89,7 @@ export default async function Dashboard() {
         <Card><CardHeading title={admin ? "Reviewer progress" : "My progress"} description={admin ? "Panel completion" : "Submitted reviews across your assigned applications"}>
           <TextLink href={admin ? "/evaluators" : "/reviews"}>{admin ? "View evaluators" : "Open queue"}</TextLink>
         </CardHeading><div className="card-body progress-list">
-          {panel.length ? panel.map((person, index) => {
+          {panelMembers.length ? panelMembers.map((person, index) => {
             const assigned = reviews.filter((r) => r.evaluator_id === person.id);
             const complete = assigned.filter((r) => r.status === "submitted").length;
             const total = admin ? eligible.length : assigned.length;

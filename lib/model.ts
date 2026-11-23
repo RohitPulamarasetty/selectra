@@ -18,7 +18,7 @@ export const SCALE = ["Weak evidence", "Below expectations", "Meets expectations
 export const INITIAL_WEIGHTS = [20, 25, 20, 20, 15] as const;
 
 export type Eligibility = keyof typeof ELIGIBILITY;
-export type Profile = { id: string; name: string; role: "admin" | "evaluator" | "student"; active: boolean; seat: number | null };
+export type Profile = { id: string; name: string; role: "admin" | "evaluator" | "student"; active: boolean; seat: number | null; removed_at?: string | null };
 export type Cycle = {
   id: number; name: string; rubric_version: number; eligibility_version: number;
   min_overlap: number; disagreement_threshold: number; close_threshold: number; locked: boolean; intake_open: boolean; revision: number;

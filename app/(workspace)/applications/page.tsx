@@ -4,19 +4,20 @@ import { ApplicationTable } from "@/components/application-table";
 import { PageIntro } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { ELIGIBILITY, type Eligibility } from "@/lib/model";
-import { activeReviews, applications, getSnapshot, requireSession, snapshotList } from "@/lib/data";
+import { activeReviews, applications, evaluators, getSnapshot, requireSession, snapshotList } from "@/lib/data";
 
 export const metadata = { title: "Applications" };
 
 export default async function Applications({ searchParams }: { searchParams: Promise<{ q?: string; status?: string }> }) {
   const { profile } = await requireSession();
   const admin = profile.role === "admin";
-  const [records, reviews, params, snapshots] = await Promise.all([applications(), activeReviews(), searchParams, admin ? snapshotList() : Promise.resolve([])]);
+  const [records, reviews, params, snapshots, evaluatorsList] = await Promise.all([applications(), activeReviews(), searchParams, admin ? snapshotList() : Promise.resolve([]), admin ? evaluators() : []]);
   const latest = snapshots[0] ? await getSnapshot(snapshots[0].id) : null;
   const ranked = new Map(latest?.ranking.map((row) => [row.id, row.rank]));
+  const panel = new Set(evaluatorsList.filter(({ seat }) => seat !== null).map(({ id }) => id));
   const counts = new Map<string, number>();
   for (const review of reviews) {
-    if (review.status === "submitted") counts.set(review.application_id, (counts.get(review.application_id) ?? 0) + 1);
+    if (review.status === "submitted" && (!admin || panel.has(review.evaluator_id))) counts.set(review.application_id, (counts.get(review.application_id) ?? 0) + 1);
   }
   const data = records.map(({ id, name, location, education, eligibility, submitted_at }) => ({
     id, name, location, education, eligibility, submitted_at, reviews: counts.get(id) ?? 0, expected: admin ? 5 : 1,

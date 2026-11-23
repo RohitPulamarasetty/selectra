@@ -17,6 +17,7 @@ export default async function Evaluators() {
   const { demo } = await requireSession(true);
   return <>
     <PageIntro eyebrow="Panel management" title="Evaluators" description="Monitor workload, understand scoring patterns, and investigate large differences.">
+      <Button asChild variant="outline"><Link href="/users?role=evaluator">Manage accounts</Link></Button>
       <Button asChild variant="outline"><Link href="/api/exports/progress" prefetch={false} download><Download size={15} /> Export progress</Link></Button>
     </PageIntro>
     <div className="stack-lg">
@@ -28,10 +29,10 @@ export default async function Evaluators() {
             const reviews = allReviews.filter((r) => r.evaluator_id === person.id && eligible.has(r.application_id));
             const { assigned, completed, pending, lastActivity } = reviewerMetrics(reviews);
             const calibration = state.reviewers.find((r) => r.id === person.id);
-            return <tr key={person.id}><td><div className="identity"><Avatar name={person.name} variant={index} /><span><strong>{person.name}</strong><small>{person.active ? "Active" : "Suspended"}</small></span></div></td>
+            return <tr key={person.id}><td><div className="identity"><Avatar name={person.name} variant={index} /><span><strong>{person.name}</strong><small>{person.seat ? `Seat ${person.seat}` : "Supplemental"} · {person.removed_at ? "Deleted" : person.active ? "Active" : "Blocked"}</small></span></div></td>
               <td>{assigned}</td><td>{completed}</td><td>{pending}</td><td>{percent(completed, assigned)}%</td><td>{score(calibration?.raw_average)}</td><td>{score(calibration?.normalized_average)}</td>
               <td>{lastActivity ? dateLabel(lastActivity, true) : "—"}</td>
-              <td><AdminDialog action="Evaluator updated" entity={person.id} name={person.name} active={person.active} label="Manage" disabled={demo} /></td></tr>;
+              <td><AdminDialog action="Evaluator updated" entity={person.id} name={person.name} active={person.active} label="Edit name or access" disabled={demo || !!person.removed_at} /></td></tr>;
           })}
         </tbody></table></div>
         {!panel.length && <Empty title="No evaluators provisioned" description="Use the secure provisioning workflow to create the panel." />}

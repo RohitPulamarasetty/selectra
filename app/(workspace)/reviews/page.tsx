@@ -12,8 +12,9 @@ export const metadata = { title: "Reviews" };
 export default async function Reviews() {
   const { profile } = await requireSession();
   const admin = profile.role === "admin";
-  const [records, reviews, panel] = await Promise.all([applications(), activeReviews(), admin ? evaluators() : Promise.resolve([])]);
+  const [records, reviews, people] = await Promise.all([applications(), activeReviews(), admin ? evaluators() : Promise.resolve([])]);
   if (admin) {
+    const panel = people.filter(({ seat }) => seat !== null);
     const eligible = records.filter((a) => a.eligibility === "eligible");
     const ids = new Set(eligible.map((a) => a.id));
     return <><PageIntro eyebrow="Evaluations" title="Review oversight" description="Inspect individual evaluations and manage the active review panel.">

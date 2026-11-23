@@ -1,0 +1,32 @@
+.users-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  padding: 2px 18px 18px;
+}
+.users-filter .field:first-child { flex: 1 1 215px; }
+.users-filter .field:nth-child(2) { flex: 0 1 175px; }
+.users-filter .input { min-height: 40px; }
+.users-filter .text-link { min-height: 40px; }
+.users-list { list-style: none; margin: 0; padding: 0; }
+.users-list li {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(150px,auto) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+}
+.users-identity, .users-tags { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.users-identity p { color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.users-tags { flex-wrap: wrap; }
+.users-pagination { padding: 14px 18px; display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--line); }
+.user-assignment { border-top: 1px solid var(--line); padding-top: 12px; }
+.user-assignment > .button { justify-self: start; }
+@media (max-width: 640px) {
+  .users-list li { grid-template-columns: minmax(0,1fr) auto; gap: 8px; }
+  .users-tags { grid-column: 1; grid-row: 2; }
+  .users-list li > button { grid-row: 1; grid-column: 2; }
+  .users-filter .field:nth-child(2) { flex-basis: 128px; }
+}

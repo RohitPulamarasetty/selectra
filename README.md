@@ -16,3 +16,4 @@ With Node.js 22.12 or newer, run `npm run demo` and open **http://localhost:3000
 4. Check **Tables → public → applications** in Neon. Use the new hosted credentials to sign in on Vercel.
 
 Start with a fresh Neon database for the demo. Running setup again keeps the existing records and accounts.
+Existing workspaces apply new schema migrations on the first database-backed request after deployment.

@@ -6,7 +6,7 @@ const runtime = globalThis as typeof globalThis & {
 };
 
 export async function database() {
-  runtime.selectraDatabase ??= openDatabase().catch((error: unknown) => {
+  runtime.selectraDatabase ??= openDatabase({ migrate: true }).catch((error: unknown) => {
     delete runtime.selectraDatabase;
     throw error;
   });

@@ -1,4 +1,4 @@
-.auth-layout { min-height: 100svh; background: #f4efe3; }
+.auth-layout { min-height: 100svh; background: #f6f0e4; }
 .auth-main { min-height: calc(100svh - 76px); display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr); }
 .auth-photo { position: relative; isolation: isolate; display: flex; align-items: end; padding: clamp(24px, 5.2vw, 74px); background: #17382c; color: #fffaf1; overflow: hidden; }
 .auth-photo img { z-index: -2; object-fit: cover; object-position: center 52%; animation: auth-image .95s cubic-bezier(.16,.72,.24,1) both; }
@@ -31,13 +31,13 @@
   .auth-photo img, .auth-photo p, .auth-form-shell { animation: none; }
 }
 
-.demo-access { display: grid; gap: 11px; padding: 14px; margin-top: 16px; border: 1px solid #cbd5c3; border-radius: 7px; background: #edf1e5; }
+.demo-access { display: grid; gap: 11px; padding: 14px; margin-top: 16px; border: 1px solid #cbd5c3; border-radius: 9px; background: #edf1e5; box-shadow: 0 8px 22px #27463808; }
 .demo-access-title span { font-weight: 730; color: var(--ink); }
-.demo-access-title p { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.demo-access-title p { color: var(--muted); font-size: 13px; margin-top: 2px; }
 .demo-access-roles { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.demo-access-roles .button { min-height: 34px; padding: 5px 8px; font-size: 11px; }
+.demo-access-roles .button { min-height: 40px; padding: 7px 9px; font-size: 12px; }
 .demo-credentials { min-width: 0; }
-.demo-credentials summary { display: flex; align-items: center; gap: 6px; width: fit-content; min-height: 29px; color: var(--accent-strong); font-size: 12px; font-weight: 680; list-style: none; }
+.demo-credentials summary { display: flex; align-items: center; gap: 6px; width: fit-content; min-height: 34px; color: var(--accent-strong); font-size: 12px; font-weight: 680; list-style: none; }
 .demo-credentials summary::-webkit-details-marker { display: none; }
 .demo-credentials summary:hover { text-decoration: underline; text-underline-offset: 3px; }
 .demo-credentials summary svg:last-child { transition: transform .2s; }

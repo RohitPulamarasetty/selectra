@@ -49,7 +49,7 @@ export default async function Apply() {
     <a className="skip-link" href="#student-content">Skip to content</a>
     <header className="student-header"><div className="student-wrap">
       <Link href="/" className="student-brand" aria-label="Selectra home"><Brand /></Link>
-      <div><Pill tone="green">{current.demo ? "Student demo" : "Student portal"}</Pill><form action={signOut} data-student-signout><Button variant="ghost" size="sm" type="submit"><LogOut size={15} /> Sign out</Button></form></div>
+      <div><Pill tone="green">{current.demo ? "Student demo" : "Student portal"}</Pill><form action={signOut} data-student-signout><Button variant="outline" className="signout-button" size="sm" type="submit"><LogOut size={15} /> Sign out</Button></form></div>
     </div></header>
 
     <main id="student-content" className="student-wrap">
