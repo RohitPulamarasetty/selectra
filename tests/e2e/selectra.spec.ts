@@ -41,7 +41,7 @@ test("administrator signs in, uses the sidebar and keyboard search, and signs ou
   await expect(page.getByRole("row")).toHaveCount(2);
   await page.getByText("SEL-0006", { exact: true }).click();
   await expect(page.getByRole("heading", { name: "Arjun Menon" })).toBeVisible();
-  await page.getByRole("button", { name: /^Account menu for / }).press("Enter");
+  await page.locator(".account-menu summary").press("Enter");
   await page.getByRole("button", { name: "Sign out" }).click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto("/settings");

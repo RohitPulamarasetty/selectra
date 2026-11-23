@@ -80,7 +80,7 @@ test("student moves from a private draft to a published decision", async ({ page
       await reviewerPage.goto(`/applications/${id}`);
       await reviewerPage.getByRole("link", { name: "Open evaluation" }).click();
       await fillReview(reviewerPage, "5");
-      await reviewerPage.getByRole("button", { name: /^Account menu for / }).press("Enter");
+      await reviewerPage.locator(".account-menu summary").press("Enter");
       await reviewerPage.getByRole("button", { name: "Sign out" }).click();
       await expect(reviewerPage).toHaveURL(/\/login$/);
     }
