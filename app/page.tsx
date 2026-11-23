@@ -1,73 +1,73 @@
-import Link from "next/link";
-import { ArrowDown, ArrowRight, ArrowUpRight, ClipboardCheck, FileText, GitCompareArrows, Scale } from "lucide-react";
 import { CampusPhoto } from "@/components/campus-photo";
-import { Pill } from "@/components/common";
-import { LandingWorkflow } from "@/components/landing-workflow";
+import Link from "next/link";
+import { ArrowDown, ArrowRight, ArrowUpRight, Fingerprint, GitCompareArrows, Scale } from "lucide-react";
+import { Brand, CreatorCredit } from "@/components/common";
 import { PublicHeader } from "@/components/public-header";
-import { Button } from "@/components/ui/button";
+import { LandingWorkflow } from "@/components/landing-workflow";
 import "./landing.css";
 
 export default function Home() {
-  return <div className="landing paper-desk">
+  return <div className="landing">
     <a className="skip-link" href="#main-content">Skip to content</a>
     <PublicHeader navigation={<><a href="#how-it-works">Workflow</a><a href="#decision-process">Evaluation method</a></>}>
       <Link href="/login" className="site-sign-in">Sign in</Link>
-      <Button variant="outline" asChild><Link href="/apply">Student portal <ArrowUpRight size={15} /></Link></Button>
+      <Link href="/apply" className="lp-button lp-button-small">Student portal <ArrowUpRight size={15} /></Link>
     </PublicHeader>
 
-    <main id="main-content" className="site-width lp-main">
-      <section className="lp-hero paper-sheet" aria-labelledby="hero-title">
+    <main id="main-content">
+      <section className="lp-wrap lp-hero" aria-labelledby="hero-title">
         <div className="lp-hero-copy">
-          <p className="document-label lp-enter"><FileText size={15} /> Admissions workspace</p>
-          <h1 id="hero-title"><span>Every application</span>{" "}<em>in focus.</em></h1>
-          <p className="lp-description">Submit an application, review the evidence, and publish a decision from one workspace.</p>
+          <p className="lp-kicker lp-enter"><span/> An admissions workspace</p>
+          <h1 id="hero-title"><span>Every</span>{" "}<span>application</span>{" "}<em>in focus.</em></h1>
+          <p className="lp-description lp-enter">From a student’s first draft to the published shortlist. Keep the evidence, reviews, and decisions together.</p>
           <div className="lp-hero-actions lp-enter">
-            <Button asChild><Link href="/apply">Start an application <ArrowUpRight size={18} /></Link></Button>
+            <Link href="/apply" className="lp-button lp-primary">Start an application <ArrowUpRight size={19} /></Link>
             <Link href="/login" className="lp-staff">Staff sign in <ArrowRight size={16} /></Link>
           </div>
         </div>
+        <figure className="lp-visual">
+          <div className="lp-photo">
+            <CampusPhoto alt="Two students climbing a sunlit staircase at a fictional college" hero sizes="(max-width: 760px) 100vw, (max-width: 1550px) 46vw, 700px" />
+            <div className="lp-photo-corners" aria-hidden="true"><i/><i/><i/><i/></div>
+          </div>
+          <a className="lp-photo-link" href="#how-it-works">
+            <span><small>Explore Selectra</small><strong>From application to decision</strong></span>
+            <span className="lp-visual-arrow"><ArrowDown size={21} /></span>
+          </a>
+        </figure>
+      </section>
 
-        <div className="lp-file">
-          <div className="lp-file-tab"><FileText size={14} /> Sample application</div>
-          <figure className="lp-file-paper">
-            <div className="lp-file-header"><span>Application record</span><code>SEL-0001</code></div>
-            <div className="lp-photo">
-              <CampusPhoto alt="Two students on a sunlit campus staircase" hero sizes="(max-width: 740px) 86vw, (max-width: 1100px) 36vw, 430px" />
-            </div>
-            <figcaption className="lp-file-caption">
-              <div><h2>Ananya Rao</h2><p>B.Sc. Statistics · Pune</p></div>
-              <Pill tone="green" dot>Eligible</Pill>
-            </figcaption>
-            <a className="lp-file-link" href="#how-it-works">Follow this application <ArrowDown size={16} /></a>
-          </figure>
+      <section className="lp-workflow" id="how-it-works">
+        <div className="lp-wrap">
+          <div className="lp-section-header">
+            <div><p className="lp-kicker"><span/> The workflow</p><h2>Follow an application.</h2></div>
+            <p>See what each person does and what Selectra records along the way.</p>
+          </div>
+          <LandingWorkflow />
         </div>
       </section>
 
-      <section className="lp-workflow" id="how-it-works" aria-labelledby="workflow-heading">
-        <header className="lp-section-header">
-          <h2 id="workflow-heading">Follow an application.</h2>
-          <p>Four steps from submission to decision.</p>
-        </header>
-        <LandingWorkflow />
-      </section>
-
-      <section className="lp-method paper-sheet" id="decision-process" aria-labelledby="method-heading">
-        <div>
-          <h2 id="method-heading">How decisions are made.</h2>
-          <p>Try the rubric and see how scores turn into a shortlist.</p>
-          <Button asChild variant="outline"><Link href="/evaluation">Open methodology <ArrowUpRight size={16} /></Link></Button>
+      <section className="lp-method" id="decision-process">
+        <div className="lp-wrap lp-method-layout">
+          <div><p className="lp-kicker"><span/> The evaluation method</p>
+            <h2>A decision you<br/>can <em>trace.</em></h2>
+            <p>From rubric scores to a published shortlist, each step has a rule and a record.</p>
+            <Link href="/evaluation" className="lp-button lp-primary">Open methodology <ArrowUpRight size={17} /></Link>
+          </div>
+          <div className="lp-method-list">
+            <article><Scale size={24} /><div><h3>Weighted criteria</h3><p>Five ratings contribute to a score with a maximum of 100.</p></div></article>
+            <article><GitCompareArrows size={24} /><div><h3>Reviewer calibration</h3><p>Adjust for reviewer scoring patterns using only applications all five reviewers assessed.</p></div></article>
+            <article><Fingerprint size={24} /><div><h3>Recorded publication</h3><p>Each shortlist preserves its scores, ranking rules, and publication rationale.</p></div></article>
+          </div>
         </div>
-        <ul className="lp-method-list">
-          <li><Scale size={20} /><div><h3>Weighted criteria</h3><p>Five ratings make up a score out of 100.</p></div></li>
-          <li><GitCompareArrows size={20} /><div><h3>Reviewer calibration</h3><p>Compare scoring patterns on shared applications.</p></div></li>
-          <li><ClipboardCheck size={20} /><div><h3>Published shortlist</h3><p>Keep a record of the scores and decision.</p></div></li>
-        </ul>
       </section>
-
-      <footer className="lp-footer">
-        <p>Practice workspace with fictional applications.</p>
-        <div><Link href="/apply">Student portal</Link><Link href="/login">Staff sign in</Link></div>
-      </footer>
     </main>
+
+    <footer className="lp-footer">
+      <div className="lp-wrap lp-footer-main"><Link href="/" aria-label="Selectra home"><Brand /></Link>
+        <CreatorCredit />
+        <div><Link href="/apply">Student portal</Link><Link href="/login">Staff sign in</Link></div>
+      </div>
+    </footer>
   </div>;
 }

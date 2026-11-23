@@ -8,7 +8,7 @@ import {
   ChevronRight, House, ListChecks, LockKeyhole, LogOut, Menu, PanelLeftClose, PanelLeftOpen, Search, Settings2,
   UsersRound, FolderOpen, type LucideIcon,
 } from "lucide-react";
-import { DemoLabel, Avatar, Brand } from "@/components/common";
+import { DemoLabel, Avatar, Brand, CreatorCredit } from "@/components/common";
 import { WorkspaceSearch } from "@/components/workspace-search";
 import { Button, cn } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -135,7 +135,7 @@ export function Shell({ profile, cycle, children }: { profile: Profile; cycle: C
           </details>
         </div>
       </header>
-      <main id="main-content" className="main-content">{children}<footer className="main-footer"><DemoLabel /><Link href="/">Selectra home <ArrowUpRight size={12} /></Link></footer></main>
+      <main id="main-content" className="main-content">{children}<footer className="main-footer"><DemoLabel /><CreatorCredit /><Link href="/">Selectra home <ArrowUpRight size={12} /></Link></footer></main>
     </div>
   </div>;
 }

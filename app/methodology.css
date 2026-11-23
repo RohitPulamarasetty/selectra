@@ -1,32 +1,35 @@
-.public-guide > main { padding-top: clamp(18px, 4vw, 43px); }
-.public-guide footer a { display: inline-flex; gap: 6px; align-items: center; font-weight: 620; color: var(--wine); }
-.public-guide footer a:hover { text-decoration: underline; }
-.public-guide footer { padding: 19px 0 25px; display: flex; flex-wrap: wrap; gap: 18px; }
-.method-guide { --mg-ink: var(--ink); --mg-muted: var(--muted); --mg-accent: var(--wine); --mg-line: var(--rule); color: var(--mg-ink); }
-.guide-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(125px, .26fr); gap: 16px; padding: clamp(18px, 3.5vw, 43px); background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--wine); box-shadow: var(--sheet-shadow); }
-.guide-label { color: var(--wine); display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 650; }
-.guide-hero h1 { font: 630 clamp(31px, 5vw, 60px)/1 var(--font-editorial); color: var(--ink); letter-spacing: -.035em; margin: 9px 0; text-wrap: balance; }
-.guide-hero p { color: var(--muted); font-size: 14px; line-height: 1.53; max-width: 49ch; }
-.guide-hero a { display: inline-flex; align-items: center; gap: 5px; font-weight: 650; font-size: 12px; color: var(--wine); border-bottom: 1px solid var(--rule-dark); padding-block: 8px 3px; }
-.guide-hero a:hover { border-color: var(--wine); }
-.guide-hero dl { margin: auto 0 0; background: var(--paper); padding: 11px; border: 1px solid var(--rule); }
-.guide-hero dl div { border-top: 1px solid var(--rule); padding: 6px 0; }
+.public-guide { min-height: 100vh; }
+.public-guide > main { padding-top: clamp(18px, 4vw, 44px); }
+.public-guide footer { padding: 19px 0 25px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+.public-guide footer > a { display: inline-flex; gap: 5px; align-items: center; color: var(--accent-strong); font-weight: 650; }
+.public-guide footer > a:hover { text-decoration: underline; }
+.public-guide .creator-credit { margin-inline-start: auto; }
+.method-guide { --mg-ink: #264236; --mg-muted: #4d7564; --mg-accent: #53a381; --mg-line: #ebe8da; color: var(--mg-ink); }
+.guide-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(130px, .24fr); position: relative; isolation: isolate; gap: 14px; padding: clamp(19px, 3.8vw, 51px); overflow: hidden; color: #fcfbf6; background: #1c4231; }
+.guide-hero::before { z-index: -1; inset: 0 0 0 32%; position: absolute; content: ""; opacity: .45; background: repeating-linear-gradient(135deg, transparent 0 40px, #6ba78e 40px 41px, transparent 41px 68px); mask-image: linear-gradient(90deg, transparent, black); }
+.guide-label { color: #f6f4e8; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 650; }
+.guide-hero h1 { font: 530 clamp(31px, 5.1vw, 65px)/.96 var(--font-editorial); color: #fcfcf9; letter-spacing: -.063em; margin: 12px 0 9px; max-width: 16ch; }
+.guide-hero p { color: #f2f0e4; font-size: 14px; line-height: 1.53; max-width: 51ch; }
+.guide-hero a { display: inline-flex; align-items: center; gap: 5px; font-weight: 670; font-size: 12px; color: #fdfcf9; border-bottom: 1px solid #add5c4; padding-block: 8px 3px; }
+.guide-hero a:hover { color: #eeead5; }
+.guide-hero dl { margin: auto 0 0; backdrop-filter: blur(5px); background: #34614ebb; padding: 11px; border: 1px solid #8abca7; }
+.guide-hero dl div { border-top: 1px solid #71a991; padding: 6px 0; }
 .guide-hero dl div:first-child { border: 0; padding-top: 0; }
-.guide-hero dt { font-size: 10px; color: var(--muted); }
-.guide-hero dd { margin: 0; font-weight: 670; }
+.guide-hero dt { font-size: 10px; color: #f1eee1; }
+.guide-hero dd { margin: 0; font-weight: 700; font-family: var(--font-display); }
 .guide-layout { display: grid; grid-template-columns: minmax(128px, .22fr) minmax(0, 1fr); gap: clamp(12px, 2.2vw, 28px); margin-top: 19px; }
 .guide-index { position: sticky; align-self: start; top: 80px; }
-.guide-index nav { border: 1px solid var(--mg-line); background: var(--surface); padding: 8px; }
+.guide-index nav { border: 1px solid var(--mg-line); background: #fff; padding: 8px; }
 .guide-index nav > p { color: var(--mg-muted); font-size: 11px; font-weight: 690; padding: 3px 5px; }
 .guide-index a { display: flex; align-items: center; justify-content: space-between; gap: 3px; padding: 7px 5px; font-size: 12px; font-weight: 650; }
 .guide-index a:hover { color: var(--mg-accent); background: #f9f7f0; }
 .guide-disclaimer { color: var(--mg-muted); font-size: 11px; line-height: 1.5; margin-top: 10px; }
-.guide-sections { background: var(--surface); border: 1px solid var(--mg-line); }
+.guide-sections { background: #fff; border: 1px solid var(--mg-line); }
 .guide-section { padding: clamp(12px, 2.3vw, 29px); border-bottom: 1px solid var(--mg-line); display: grid; gap: 13px; scroll-margin-top: 81px; }
 .guide-section:last-child { border-bottom: 0; }
-.guide-section:target { box-shadow: inset 3px 0 var(--wine); }
+.guide-section:target { box-shadow: inset 3px 0 #8ac9af; }
 .guide-section-title { display: flex; align-items: start; gap: 8px; color: var(--mg-accent); }
-.guide-section-title h2 { font: 670 clamp(20px, 2.25vw, 28px)/1.1 var(--font-editorial); letter-spacing: -.02em; color: var(--mg-ink); }
+.guide-section-title h2 { font: 670 clamp(20px, 2.25vw, 28px)/1.1 var(--font-display); letter-spacing: -.04em; color: var(--mg-ink); }
 .guide-section-title p { color: var(--mg-muted); font-size: 12px; margin-top: 3px; }
 .guide-section > p, .guide-details li, .guide-rules li { color: var(--mg-muted); font-size: 13px; line-height: 1.57; }
 .guide-workflow { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1px; background: var(--mg-line); border: 1px solid var(--mg-line); }
@@ -70,7 +73,7 @@
 .guide-formula { border-left: 3px solid #8ac5ac; background: #f9f8f1; padding: 7px 9px; color: #447c65; font-size: 12px; font-weight: 625; }
 .calibration-lab { background: #fcfbf8; border: 1px solid #e7e2cf; }
 .calibration-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.calibration-field { min-width: 0; padding: 8px; border: 1px solid #f2efe2; display: grid; align-content: start; gap: 2px; background: var(--surface); }
+.calibration-field { min-width: 0; padding: 8px; border: 1px solid #f2efe2; display: grid; align-content: start; gap: 2px; background: white; }
 .calibration-field label, .calibration-field > span { font-weight: 670; font-size: 11px; }
 .calibration-field > p, .calibration-field output { font: 680 22px/1.03 var(--font-display); font-variant-numeric: tabular-nums; }
 .calibration-result { background: #f4f1e5; color: #47866c; }

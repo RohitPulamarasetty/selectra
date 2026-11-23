@@ -1,4 +1,4 @@
-import { ArrowUpRight, CircleHelp, FileText, FlaskConical, Inbox } from "lucide-react";
+import { ArrowUpRight, CircleHelp, FlaskConical, Inbox } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { initials, ELIGIBILITY, type Eligibility } from "@/lib/model";
@@ -6,7 +6,7 @@ import { cn } from "./ui/button";
 
 export function Brand({ boxed = false }: { boxed?: boolean }) {
   return <span className={cn("brand", boxed && "brand-boxed")}>
-    <span className="brand-mark" aria-hidden="true"><FileText size={17} strokeWidth={1.7} /></span>
+    <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
     <span>Selectra</span>
   </span>;
 }
@@ -56,4 +56,9 @@ export function Notice({ children, tone = "neutral" }: { children: ReactNode; to
 
 export function DemoLabel() {
   return <div className="demo-label"><FlaskConical size={14} aria-hidden="true" /> Demonstration platform — synthetic applicant data</div>;
+}
+
+
+export function CreatorCredit() {
+  return <p className="creator-credit">Built by <a href="https://linktr.ee/rohitpulamarasetty">Rohit Kumar Pulamarasetty</a></p>;
 }

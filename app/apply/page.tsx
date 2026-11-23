@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowUpRight, CheckCircle2, Clock3, FileText, LogOut, ShieldCheck } from "lucide-react";
-import { Brand, DemoLabel, Pill } from "@/components/common";
+import { Brand, CreatorCredit, DemoLabel, Pill } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { StudentApplicationForm } from "@/components/student-application-form";
 import { StudentTimeline } from "@/components/student-timeline";
@@ -45,7 +45,7 @@ export default async function Apply() {
   const submitted = !!state.id;
   const eligibility = state.eligibility && state.eligibility !== "not_screened" ? ELIGIBILITY[state.eligibility] : "Awaiting screening";
 
-  return <div className="student-portal paper-desk">
+  return <div className="student-portal">
     <a className="skip-link" href="#student-content">Skip to content</a>
     <header className="student-header"><div className="student-wrap">
       <Link href="/" className="student-brand" aria-label="Selectra home"><Brand /></Link>
@@ -99,7 +99,7 @@ export default async function Apply() {
           <StudentApplicationForm draft={draft} accepting={state.accepting} />
         </div>}
       </div>
-      <footer className="student-footer"><DemoLabel /><div><Link href="/evaluation">Evaluation guide <ArrowUpRight size={14} /></Link><Link href="/">Selectra home <ArrowUpRight size={14} /></Link></div></footer>
+      <footer className="student-footer"><DemoLabel /><CreatorCredit /><div><Link href="/evaluation">Evaluation guide <ArrowUpRight size={14} /></Link><Link href="/">Selectra home <ArrowUpRight size={14} /></Link></div></footer>
     </main>
   </div>;
 }
