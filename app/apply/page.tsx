@@ -56,8 +56,12 @@ export default async function Apply() {
       <section className="student-intro">
         <p className="student-kicker">{state.cycle}</p>
         <h1>{submitted ? "Track your application." : "Your application."}</h1>
-        <p>{current.demo ? "Explore a submitted application with fictional data." : submitted ? "Check your status or reply to a screening question." : "Add your studies and written responses."}</p>
+        <p>{submitted ? "Check your status or reply to a screening question." : "Add your studies and written responses."}</p>
       </section>
+      {current.demo && <div className="student-demo demo-workspace-controls">
+        <p>Practice workspace · Changes stay in this browser’s demo.</p>
+        <Link className="text-link" href="/login?demo=switch#demo-access">Switch demo role <ArrowUpRight size={14} /></Link>
+      </div>}
       <div className="student-grid">
         <aside className="student-sidebar">
           <section className="student-box">
@@ -86,7 +90,7 @@ export default async function Apply() {
             <p className="student-kicker">{clarification.response ? "Response recorded" : "Screening clarification"}</p>
             <h2>{clarification.response ? "Your clarification response" : "The admissions team has a question"}</h2>
             <p>{clarification.question}</p>
-            {clarification.response ? <blockquote>{clarification.response}</blockquote> : !current.demo && state.eligibility === "clarification" &&
+            {clarification.response ? <blockquote>{clarification.response}</blockquote> : state.eligibility === "clarification" &&
               <StudentClarificationForm key={clarification.id} requestId={clarification.id} />}
           </section>}
           <details className="student-box student-submitted-data"><summary><FileText size={17} /> View submitted answers</summary><dl>

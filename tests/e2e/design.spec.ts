@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { fillReview } from "./fixtures";
 
 test("the public workflow responds to keyboard navigation and exposes the evaluation guide", async ({ page }) => {
   await page.goto("/");
@@ -55,43 +56,71 @@ test("the masthead aligns across access pages and password controls respond", as
   }
 });
 
-test("demo sign-in opens the real role pages with isolated sample records", async ({ browser, page }) => {
+test("demo edits survive role changes and stay isolated between browsers", async ({ browser, page }) => {
+  const reply = "I included all four terms from the first two years.";
   await page.goto("/login");
   await page.getByRole("button", { name: "Student demo" }).click();
   await expect(page).toHaveURL(/\/apply$/);
   await expect(page.getByRole("heading", { name: "Track your application." })).toBeVisible();
-  await expect(page.getByText("SEL-0007").first()).toBeVisible();
-  await page.getByRole("button", { name: "Sign out" }).click();
-  await expect(page).toHaveURL(/\/login$/);
+  await page.getByLabel("Your response").fill(reply);
+  await page.getByRole("button", { name: "Send response" }).click();
+  await expect(page.getByText(reply, { exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Switch demo role" }).click();
 
-  const reviewer = await browser.newPage();
-  await reviewer.goto("/");
-  await reviewer.getByRole("button", { name: /Reviewer Read an application/ }).click();
-  await expect(reviewer).toHaveURL(/\/dashboard$/);
-  await expect(reviewer.getByRole("heading", { name: "My review dashboard" })).toBeVisible();
-  await reviewer.getByRole("link", { name: "Reviews", exact: true }).click();
-  await reviewer.getByRole("link", { name: "Resume draft" }).click();
-  await expect(reviewer.getByRole("heading", { name: "Applicant review" })).toBeVisible();
-  expect((await reviewer.request.get("/api/exports/applications")).status()).toBe(403);
-  await reviewer.close();
-
-  await page.goto("/demo/administrator");
-  await expect(page).toHaveURL(/\/login#demo-access$/);
   await page.getByText("Demo credentials", { exact: true }).click();
   await expect(page.getByText("admin@selectra-preview.test")).toBeVisible();
   await page.getByLabel("Email address").fill("admin@selectra-preview.test");
-  await page.getByLabel("Password", { exact: true }).fill("SelectraPreview2026!");
+  await page.getByLabel("Password", { exact: true }).fill("SelectraPractice2026!");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByRole("heading", { name: "Review dashboard", exact: true })).toBeVisible();
-  await page.getByRole("link", { name: "Applications", exact: true }).click();
-  await expect(page.getByText("Ananya Rao", { exact: true })).toBeVisible();
+  await page.goto("/applications/SEL-0007");
+  await expect(page.getByText(reply, { exact: true })).toBeVisible();
   const exportResponse = await page.request.get("/api/exports/applications");
   expect(exportResponse.status()).toBe(200);
   expect(await exportResponse.text()).toContain("Ananya Rao");
-  await page.getByRole("link", { name: "Settings", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Pause applications" })).toBeDisabled();
 
+  await page.goto("/settings");
+  await page.getByRole("button", { name: "Pause applications" }).click();
+  await page.getByLabel("Reason", { exact: true }).fill("Pause the intake for this practice session.");
+  await page.getByRole("button", { name: "Confirm change" }).click();
+  await expect(page.getByRole("button", { name: "Open applications" })).toBeVisible();
+
+  const other = await browser.newPage();
+  try {
+    await other.goto("/");
+    await other.getByRole("button", { name: /Reviewer Score an assigned application/ }).click();
+    await expect(other.getByRole("heading", { name: "My review dashboard" })).toBeVisible();
+    await other.getByRole("link", { name: "Reviews", exact: true }).click();
+    await other.getByRole("link", { name: "Resume draft" }).click();
+    await expect(other.getByRole("heading", { name: "Applicant review" })).toBeVisible();
+    await fillReview(other, "4");
+    await other.reload();
+    await expect(other.getByText("Clear evidence of independent work and a careful approach to verification.", { exact: true })).toBeVisible();
+    expect((await other.request.get("/api/exports/applications")).status()).toBe(403);
+    await other.getByRole("link", { name: "Switch demo role" }).click();
+    await other.getByRole("button", { name: "Student demo" }).click();
+    await expect(other.getByLabel("Your response")).toBeVisible();
+    await expect(other.getByText(reply, { exact: true })).toHaveCount(0);
+  } finally {
+    await other.close();
+  }
+
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Open applications" })).toBeVisible();
+  await page.getByRole("link", { name: "Switch demo role" }).click();
+  await page.getByRole("button", { name: "Start a fresh demo" }).click();
+  await page.getByRole("button", { name: "Student demo" }).click();
+  await expect(page.getByLabel("Your response")).toBeVisible();
+  await page.getByRole("link", { name: "Switch demo role" }).click();
+  await page.getByLabel("Email address").fill("applicant@selectra-preview.test");
+  await page.getByLabel("Password", { exact: true }).fill("SelectraPractice2026!");
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await page.getByLabel("City or region").fill("Kochi");
+  await page.getByRole("button", { name: "Save draft" }).click();
+  await expect(page.getByText("Draft saved.", { exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByLabel("City or region")).toHaveValue("Kochi");
   await page.context().clearCookies();
   expect((await page.request.get("/api/exports/applications")).status()).toBe(401);
 });

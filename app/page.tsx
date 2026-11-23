@@ -1,6 +1,6 @@
 import { CampusPhoto } from "@/components/campus-photo";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, ClipboardCheck, FileText, Fingerprint, GitCompareArrows, Scale, ShieldCheck } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight, ClipboardCheck, FileText, Fingerprint, GitCompareArrows, Scale, ShieldCheck } from "lucide-react";
 import { Brand, CreatorCredit } from "@/components/common";
 import { PublicHeader } from "@/components/public-header";
 import { LandingWorkflow } from "@/components/landing-workflow";
@@ -23,16 +23,21 @@ export default function Home() {
         <div className="lp-hero-copy">
           <p className="lp-kicker lp-enter"><span/> An admissions workspace</p>
           <h1 id="hero-title"><span>Every</span>{" "}<span>application</span>{" "}<em>in focus.</em></h1>
-          <p className="lp-description lp-enter">From a student’s first draft to the published shortlist. Keep the evidence, reviews, and decisions together.</p>
+          <p className="lp-description lp-enter">One place to apply, review the evidence, and publish a shortlist people can understand.</p>
           <div className="lp-hero-actions lp-enter">
             <Link href="/apply" className="lp-button lp-primary">Start an application <ArrowUpRight size={19} /></Link>
-            <a href="#explore-demo" className="lp-button lp-button-small">Try the demo <ArrowDown size={16} /></a>
+            <a href="#explore-demo" className="lp-button lp-button-small">Try the demo <ArrowRight size={16} /></a>
           </div>
         </div>
         <figure className="lp-visual">
           <div className="lp-photo">
             <CampusPhoto alt="Two students climbing a sunlit staircase at a fictional college" hero sizes="(max-width: 760px) 100vw, (max-width: 1550px) 46vw, 700px" />
             <div className="lp-photo-corners" aria-hidden="true"><i/><i/><i/><i/></div>
+            <div className="lp-photo-flow" aria-label="Three steps in Selectra">
+              <span><FileText size={15} aria-hidden="true" /> Apply</span><ArrowRight size={13} aria-hidden="true" />
+              <span><ClipboardCheck size={15} aria-hidden="true" /> Review</span><ArrowRight size={13} aria-hidden="true" />
+              <span><ShieldCheck size={15} aria-hidden="true" /> Decide</span>
+            </div>
           </div>
           <a className="lp-photo-link" href="#how-it-works">
             <span><small>Explore Selectra</small><strong>From application to decision</strong></span>
@@ -55,7 +60,7 @@ export default function Home() {
         <div className="lp-wrap">
           <div className="lp-section-header">
             <div><p className="lp-kicker"><span/> Public demo</p><h2 id="demo-heading">Choose a workspace.</h2></div>
-            <p>Open any role in one click and explore the same fictional intake.</p>
+            <p>Try the real workflow with fictional applicants. Switch roles to follow your changes from application to decision.</p>
           </div>
           <form className="lp-demo-grid" action={openDemo}>
             {demoRoles.map((role) => {

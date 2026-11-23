@@ -9,7 +9,7 @@ import { assignSupplementalReview, changeUser, createEvaluator } from "@/lib/use
 
 const initial = { error: "" };
 
-export function NewEvaluator({ seats, disabled }: { seats: number[]; disabled: boolean }) {
+export function NewEvaluator({ seats }: { seats: number[] }) {
   const [open, setOpen] = useState(false);
   const [state, submit, pending] = useActionState(async (_state: typeof initial, form: FormData) => {
     const result = await createEvaluator(_state, form);
@@ -17,7 +17,7 @@ export function NewEvaluator({ seats, disabled }: { seats: number[]; disabled: b
     return result;
   }, initial);
   return <Dialog open={open} onOpenChange={setOpen}>
-    <DialogTrigger asChild><Button type="button" disabled={disabled}><Plus size={17} /> New evaluator</Button></DialogTrigger>
+    <DialogTrigger asChild><Button type="button"><Plus size={17} /> New evaluator</Button></DialogTrigger>
     <DialogContent title="Create an evaluator" description="Share the sign-in email and initial password directly with the evaluator.">
       <form className="stack" action={submit}>
         <div className="field"><label htmlFor="eval-name">Full name</label><input className="input" id="eval-name" name="name" autoComplete="off" minLength={2} maxLength={80} required /></div>
@@ -37,7 +37,7 @@ export function NewEvaluator({ seats, disabled }: { seats: number[]; disabled: b
   </Dialog>;
 }
 
-export function ManageUser({ id, name, active, disabled }: { id: string; name: string; active: boolean; disabled: boolean }) {
+export function ManageUser({ id, name, active }: { id: string; name: string; active: boolean }) {
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [state, submit, pending] = useActionState(async (_state: typeof initial, form: FormData) => {
@@ -46,7 +46,7 @@ export function ManageUser({ id, name, active, disabled }: { id: string; name: s
     return result;
   }, initial);
   return <Dialog open={open} onOpenChange={(next) => { setOpen(next); if (next) setDeleting(false); }}>
-    <DialogTrigger asChild><Button type="button" variant="outline" size="sm" disabled={disabled} aria-label={`Manage ${name}`}><UserRoundCog size={15} /> Manage</Button></DialogTrigger>
+    <DialogTrigger asChild><Button type="button" variant="outline" size="sm" aria-label={`Manage ${name}`}><UserRoundCog size={15} /> Manage</Button></DialogTrigger>
     <DialogContent title={deleting ? `Delete ${name}’s account?` : `Manage ${name}`}
       description={deleting ? "Sign-in access ends immediately. Applications and reviews already on record are kept." :
         active ? "Blocking ends active sessions and prevents sign-in until you unblock the account." : "Unblocking allows this person to sign in again."}>

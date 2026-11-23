@@ -517,3 +517,7 @@ textarea.input { min-height: 65px; resize: vertical; }
   .workflow-shortcuts a { transition: background .2s, border-color .2s, translate .2s; }
   .workflow-shortcuts a:hover { translate: 0 -2px; }
 }
+
+.demo-workspace-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.demo-workspace-controls .text-link { white-space: normal; text-underline-offset: 3px; }
+.student-portal .demo-workspace-controls { margin-bottom: 14px; }

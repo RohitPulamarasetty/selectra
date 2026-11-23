@@ -14,7 +14,7 @@ type Directory = { accounts: DirectoryAccount[]; count: number; open_seats: numb
 type Filters = { role?: string; q?: string; page?: string };
 
 export default async function Users({ searchParams }: { searchParams: Promise<Filters> }) {
-  const [{ db, demo }, { cycle }, params] = await Promise.all([requireSession(true), cycleContext(), searchParams]);
+  const [{ db }, { cycle }, params] = await Promise.all([requireSession(true), cycleContext(), searchParams]);
   const role = params.role === "student" || params.role === "evaluator" ? params.role : "";
   const q = typeof params.q === "string" ? params.q.trim().slice(0, 120) : "";
   const page = typeof params.page === "string" && /^\d{1,4}$/.test(params.page) ? Math.max(1, Number(params.page)) : 1;
@@ -26,7 +26,7 @@ export default async function Users({ searchParams }: { searchParams: Promise<Fi
 
   return <>
     <PageIntro eyebrow="Administration" title="Users" description="Find student and evaluator accounts, manage sign-in access, and add evaluators.">
-      <NewEvaluator seats={cycle.locked ? [] : seats} disabled={demo} />
+      <NewEvaluator seats={cycle.locked ? [] : seats} />
     </PageIntro>
     <Card>
       <CardHeading title="Account directory" description={`${count} account${count === 1 ? "" : "s"}`}><UsersRound size={19} aria-hidden="true" /></CardHeading>
@@ -45,7 +45,7 @@ export default async function Users({ searchParams }: { searchParams: Promise<Fi
           </div></div>
           <div className="users-tags"><Pill>{person.role === "student" ? "Student" : person.seat ? `Evaluator · Seat ${person.seat}` : "Evaluator · Supplemental"}</Pill>
             <Pill dot tone={person.removed_at ? "gray" : person.active ? "green" : "amber"}>{person.removed_at ? "Deleted" : person.active ? "Active" : "Blocked"}</Pill></div>
-          {!person.removed_at && <ManageUser id={person.id} name={person.name} active={person.active} disabled={demo} />}
+          {!person.removed_at && <ManageUser id={person.id} name={person.name} active={person.active} />}
         </li>)}
       </ul> : <Empty title="No accounts found" description={q || role ? "Try a different name, email, or role." : "New student and evaluator accounts appear here."} />}
       {(page > 1 || count > 25) && <nav className="users-pagination" aria-label="Account pages">

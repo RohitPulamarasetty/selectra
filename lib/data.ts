@@ -2,16 +2,10 @@ import "server-only";
 import { cache } from "react";
 import { notFound, redirect } from "next/navigation";
 import { currentIdentity } from "@/lib/auth";
-import { workspace } from "@/lib/db/server";
 import { roleHome } from "@/lib/model";
 import type { Application, Audit, Cycle, Profile, Ranking, Review, Rubric, Snapshot } from "@/lib/model";
 
-export const session = cache(async () => {
-  const identity = await currentIdentity();
-  if (!identity) return null;
-  const { db, profile, demo } = identity;
-  return { db: workspace(db, profile.id, demo), profile, demo };
-});
+export const session = cache(currentIdentity);
 
 export async function requireSession(admin = false) {
   const current = await session();

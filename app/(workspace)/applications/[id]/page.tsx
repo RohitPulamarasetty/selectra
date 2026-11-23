@@ -14,7 +14,7 @@ import type { StudentClarification } from "@/lib/student";
 export const metadata = { title: "Application profile" };
 
 export default async function ApplicationProfile({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ rubric?: string }> }) {
-  const [{ id }, { db, profile, demo }, search] = await Promise.all([params, requireSession(), searchParams]);
+  const [{ id }, { db, profile }, search] = await Promise.all([params, requireSession(), searchParams]);
   if (!/^SEL-\d{4}$/.test(id)) notFound();
   const admin = profile.role === "admin";
   const [{ cycle }, [applicant], panel, versions] = await Promise.all([
@@ -32,7 +32,7 @@ export default async function ApplicationProfile({ params, searchParams }: { par
   const supplementalReviews = assigned.filter((review) => !panelIds.has(review.evaluator_id));
   const options = panel.filter((person) => person.seat === null && person.active
     && !supplementalReviews.some((review) => review.evaluator_id === person.id));
-  const canAssign = !demo && !historical && !cycle.locked && applicant.eligibility === "eligible";
+  const canAssign = !historical && !cycle.locked && applicant.eligibility === "eligible";
   const assessment = eligibilityFor(applicant);
   const clarifications = admin ? await db.rows<StudentClarification>(
     "select * from public.student_clarifications where application_id=$1 order by id desc limit 20", [id],
@@ -62,7 +62,7 @@ export default async function ApplicationProfile({ params, searchParams }: { par
             {applicant.duplicate_of && <div><dt>Duplicate of</dt><dd>{applicant.duplicate_of}</dd></div>}
           </dl><Notice><strong>{ELIGIBILITY[applicant.eligibility]}</strong><p>{applicant.eligibility_reason}</p></Notice>
           {admin && <><p className="tiny muted">Rule check · {ELIGIBILITY[assessment.status]}. {assessment.reason}</p>
-            <AdminDialog action="Eligibility updated" entity={id} status={applicant.eligibility} disabled={cycle.locked || demo} />
+            <AdminDialog action="Eligibility updated" entity={id} status={applicant.eligibility} disabled={cycle.locked} />
           </>}</div>
         </Card>
         {admin && <Card><CardHeading title="Review panel" description={`Rubric v${rubric} · ${panelReviews.filter((r) => r.status === "submitted").length} of 5 submitted`} />
@@ -77,11 +77,11 @@ export default async function ApplicationProfile({ params, searchParams }: { par
                 <div className="split-actions"><strong className="label">{person.name}</strong>{review ? <ReviewPill value={review.status} /> : <span className="tiny muted">Unassigned</span>}</div>
                 {review && <div className="split-actions">
                   <Link className="text-link" href={`/reviews/${review.id}`}>Inspect review {review.raw_score == null ? "" : `· ${score(review.raw_score)}`} <ArrowRight size={13} /></Link>
-                  {!historical && review.status === "pending" && <AdminDialog action="Assignment removed" entity={review.id} label="Remove" disabled={cycle.locked || demo} />}
+                  {!historical && review.status === "pending" && <AdminDialog action="Assignment removed" entity={review.id} label="Remove" disabled={cycle.locked} />}
                 </div>}
               </div>;
             }) : <Empty title="Panel not provisioned" description="Provision the five reviewer seats first." />}
-            {!historical && panelReviews.length < 5 && applicant.eligibility === "eligible" && <AdminDialog action="Assignments restored" entity={id} disabled={cycle.locked || demo} />}
+            {!historical && panelReviews.length < 5 && applicant.eligibility === "eligible" && <AdminDialog action="Assignments restored" entity={id} disabled={cycle.locked} />}
           </div>
         </Card>}
         {admin && (supplementalReviews.length > 0 || (canAssign && options.length > 0)) && <Card>
@@ -90,7 +90,7 @@ export default async function ApplicationProfile({ params, searchParams }: { par
             {supplementalReviews.map((review) => <div className="review-panel-row" key={review.id}>
               <div className="split-actions"><strong className="label">{panel.find((person) => person.id === review.evaluator_id)?.name ?? "Evaluator"}</strong><ReviewPill value={review.status} /></div>
               <div className="split-actions"><Link className="text-link" href={`/reviews/${review.id}`}>Inspect review <ArrowRight size={13} /></Link>
-                {!historical && review.status === "pending" && <AdminDialog action="Assignment removed" entity={review.id} label="Remove" disabled={cycle.locked || demo} />}</div>
+                {!historical && review.status === "pending" && <AdminDialog action="Assignment removed" entity={review.id} label="Remove" disabled={cycle.locked} />}</div>
             </div>)}
             {canAssign && <SupplementalAssignment application={id} options={options} />}
           </div>

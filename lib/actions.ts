@@ -2,9 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { demoSignIn, endSession, passwordSignIn } from "@/lib/auth";
-import { demoCredentials, demoPassword, demoRoleForEmail, isDemoRole } from "@/lib/demo-preview";
-import { demoReadOnly } from "@/lib/demo-session";
+import { clearDemo, demoSignIn, endSession, passwordSignIn } from "@/lib/auth";
+import { demoAccountRole, demoPassword, demoRoleForEmail, isDemoRole } from "@/lib/demo-preview";
 import { session } from "@/lib/data";
 import { mutationError } from "@/lib/db/server";
 import { adminRequest, loginSchema, reviewRequest, shortlistRequest } from "@/lib/validation";
@@ -17,7 +16,7 @@ export async function signIn(input: unknown) {
   if (demoRole && parsed.data.password !== demoPassword) return { error: "Sign-in failed. Check your email and password." };
   let auth;
   try {
-    auth = demoRole ? { role: await demoSignIn(demoRole), error: undefined }
+    auth = demoRole ? await demoSignIn(demoRole)
       : await passwordSignIn(parsed.data.email, parsed.data.password);
   } catch (error) {
     console.error("Selectra sign-in failed", error instanceof Error ? error.message : "Unknown error");
@@ -30,13 +29,20 @@ export async function signIn(input: unknown) {
 export async function openDemo(form: FormData) {
   const role = form.get("role");
   if (typeof role !== "string" || !isDemoRole(role)) redirect("/login#demo-access");
+  let auth;
   try {
-    await demoSignIn(role);
+    auth = await demoSignIn(role);
   } catch (error) {
     console.error("Selectra demo sign-in failed", error instanceof Error ? error.message : "Unknown error");
     redirect("/login?demo=unavailable#demo-access");
   }
-  redirect(roleHome(demoCredentials[role].accountRole));
+  if (auth.error) redirect("/login?demo=blocked#demo-access");
+  redirect(roleHome(demoAccountRole(role)));
+}
+
+export async function resetDemo() {
+  await clearDemo();
+  redirect("/login?demo=fresh#demo-access");
 }
 
 export async function signOut() {
@@ -51,10 +57,9 @@ export async function saveReview(input: unknown) {
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const current = await session();
   if (current?.profile.role !== "evaluator") return { error: "Sign in with your evaluator account to save a review." };
-  if (current.demo) return { error: demoReadOnly };
   const { id, version, ratings, comments, feedback, submit } = parsed.data;
   try {
-    const review = await current.db.call<Review>(
+    const review = await current.db.mutate<Review>(
       "select to_jsonb(public.save_review($1,$2,$3,$4,$5,$6)) as value",
       [id, version, ratings, comments, feedback, submit],
     );
@@ -70,16 +75,15 @@ export async function adminChange(input: unknown) {
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const current = await session();
   if (current?.profile.role !== "admin") return { error: "Administrator access is required." };
-  if (current.demo) return { error: demoReadOnly };
   const { action, entity, details, reason } = parsed.data;
   const { db } = current;
   try {
     if (action === "Intake opened" || action === "Intake paused") {
-      await db.call("select public.update_intake($1,$2)", [action === "Intake opened", reason]);
+      await db.mutate("select public.update_intake($1,$2)", [action === "Intake opened", reason]);
     } else if (action === "Eligibility updated" && details.status === "clarification") {
-      await db.call("select public.request_student_clarification($1,$2,$3)", [entity, reason, details.question ?? ""]);
+      await db.mutate("select public.request_student_clarification($1,$2,$3)", [entity, reason, details.question ?? ""]);
     } else {
-      await db.call("select public.admin_change($1,$2,$3,$4)", [action, entity, details, reason]);
+      await db.mutate("select public.admin_change($1,$2,$3,$4)", [action, entity, details, reason]);
     }
     revalidatePath("/(workspace)", "layout");
     revalidatePath("/apply");
@@ -94,10 +98,9 @@ export async function publishShortlist(input: unknown) {
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const current = await session();
   if (current?.profile.role !== "admin") return { error: "Administrator access is required." };
-  if (current.demo) return { error: demoReadOnly };
   const { size, revision, reason } = parsed.data;
   try {
-    const id = await current.db.call<number>(
+    const id = await current.db.mutate<number>(
       "select to_jsonb(public.finalize_shortlist($1,$2,$3)) as value", [size, revision, reason],
     );
     revalidatePath("/(workspace)", "layout");

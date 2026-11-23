@@ -2,12 +2,13 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { demoRoleForEmail, type DemoRole } from "@/lib/demo-preview";
-import { demoIdentity, demoLifetimeSeconds, demoRoleFromToken, makeDemoToken } from "@/lib/demo-session";
-import { database } from "@/lib/db/server";
+import { createDemoScope, demoIdentity, demoToken, parseDemoToken } from "@/lib/demo-session";
+import { database, workspace } from "@/lib/db/server";
 import { digest, hashPassword, verifyPassword } from "@/lib/db/password.mjs";
 import type { Profile } from "@/lib/model";
 
 const cookieName = "selectra_session";
+const demoCookie = "selectra_demo_workspace";
 const lifetimeSeconds = 60 * 60 * 24 * 7;
 const cookieOptions = {
   httpOnly: true,
@@ -17,17 +18,21 @@ const cookieOptions = {
 };
 
 export async function currentIdentity() {
-  const token = (await cookies()).get(cookieName)?.value;
+  const store = await cookies();
+  const token = store.get(cookieName)?.value;
   if (!token) return null;
-  const demoRole = demoRoleFromToken(token);
-  if (demoRole) return demoIdentity(demoRole);
+  const demo = parseDemoToken(token);
+  if (demo && demo.purpose !== "workspace") {
+    const browser = parseDemoToken(store.get(demoCookie)?.value);
+    return browser?.purpose === "workspace" && browser.scope.id === demo.scope.id ? demoIdentity(demo.scope, demo.purpose) : null;
+  }
   if (!/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
   const db = await database();
   const { rows } = await db.query<Profile>(`
     select p.* from auth.sessions s join public.profiles p on p.id=s.user_id
     where s.token_hash=$1 and s.expires_at>now() and p.active
   `, [digest(token)]);
-  return rows[0] ? { profile: rows[0], db, demo: false as const } : null;
+  return rows[0] ? { profile: rows[0], db: workspace(db, rows[0].id), demo: false as const } : null;
 }
 
 async function createSession(userId: string) {
@@ -47,11 +52,22 @@ async function createSession(userId: string) {
 }
 
 export async function demoSignIn(role: DemoRole) {
-  const { profile } = await demoIdentity(role);
   const store = await cookies();
+  const existing = parseDemoToken(store.get(demoCookie)?.value);
+  const scope = existing?.purpose === "workspace" ? existing.scope : createDemoScope();
+  const identity = await demoIdentity(scope, role);
+  if (!identity) return { error: "This role is blocked in your demo. Switch roles or start a fresh demo." };
   await revokeStoredSession(store.get(cookieName)?.value);
-  store.set(cookieName, makeDemoToken(role), { ...cookieOptions, maxAge: demoLifetimeSeconds });
-  return profile.role;
+  const maxAge = scope.expires - Math.floor(Date.now() / 1000);
+  store.set(demoCookie, demoToken(scope, "workspace"), { ...cookieOptions, maxAge });
+  store.set(cookieName, demoToken(scope, role), { ...cookieOptions, maxAge });
+  return { role: identity.profile.role, error: undefined };
+}
+
+export async function clearDemo() {
+  const store = await cookies();
+  if (parseDemoToken(store.get(cookieName)?.value)) store.set(cookieName, "", { ...cookieOptions, maxAge: 0 });
+  store.set(demoCookie, "", { ...cookieOptions, maxAge: 0 });
 }
 
 async function revokeStoredSession(token: string | undefined) {

@@ -136,7 +136,10 @@ export function Shell({ profile, cycle, demo, children }: { profile: Profile; cy
           </details>
         </div>
       </header>
-      <main id="main-content" className="main-content">{demo && <div className="mb-3"><Notice>Public demo · Read-only sample workspace</Notice></div>}{children}<footer className="main-footer"><DemoLabel /><CreatorCredit /><Link href="/">Selectra home <ArrowUpRight size={12} /></Link></footer></main>
+      <main id="main-content" className="main-content">{demo && <div className="mb-3"><Notice><div className="demo-workspace-controls">
+        <span>Practice workspace · Changes stay in this browser’s demo.</span>
+        <Link className="text-link" href="/login?demo=switch#demo-access">Switch demo role <ArrowUpRight size={14} /></Link>
+      </div></Notice></div>}{children}<footer className="main-footer"><DemoLabel /><CreatorCredit /><Link href="/">Selectra home <ArrowUpRight size={12} /></Link></footer></main>
     </div>
   </div>;
 }

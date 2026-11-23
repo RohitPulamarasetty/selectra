@@ -2,7 +2,7 @@
 
 An admissions workspace for applications, independent reviews, and shortlists. The demo includes eight fictional applications.
 
-Choose a demo role on the sign-in page. One-click access and public demo credentials open the real dashboards with a separate, read-only sample cohort. Create a student account to save drafts and submit an application.
+Choose a demo role on the sign-in page. One-click access and public demo credentials open the real dashboards with an editable practice workspace separate from live accounts and applications. Switch roles to continue with the same sample data for up to two hours. Create a student account to save drafts and submit an application.
 
 ## Run locally
 
